@@ -16,30 +16,59 @@ export default function LoginForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErr("");
+
+    const trimmedEmail = form.email.trim();
+    if (!trimmedEmail) {
+      return setErr("Please enter your email address.");
+    }
+
     setLoading(true);
 
     try {
-      const response = await api.post("/api/auth/login", form);
-      const { token, user } = response.data;
+      const payload = {
+        email: trimmedEmail,
+        password: form.password,
+      };
 
-      // Persist token in secure cookie for 7 days
-      Cookies.set("token", token, {
-        expires: 7,
-        secure: true,
-        sameSite: "strict",
-      });
-      localStorage.setItem("user", JSON.stringify(user));
+      const response = await api.post(
+        "https://postify-main-backend.vercel.app/api/v1/auth/login",
+        payload
+      );
+      console.log("response --> ",response);
 
+      // Extract token and user data based on backend response shape
+      const { token, data: user } = response.data;
+
+      // Store JWT token securely in Cookies for 7 days
+      if (token) {
+        Cookies.set("token", token, {
+          expires: 7,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "strict",
+        });
+      }
+
+      // Store user details in localStorage
+      if (user) {
+        localStorage.setItem("user", JSON.stringify(user));
+      }
+
+      // Navigate to dashboard
       router.push("/dashboard");
     } catch (error: any) {
-      const data = error.response?.data;
+      const responseData = error.response?.data;
 
-      // If user exists but isn't verified, route them directly to OTP verification
-      if (data?.unverified) {
-        router.push(`/verify-otp?email=${encodeURIComponent(form.email)}`);
+      // If user exists but is not verified, route directly to OTP verification
+      if (responseData?.unverified) {
+        router.push(`/verify-otp?email=${encodeURIComponent(trimmedEmail)}`);
         return;
       }
-      setErr(data?.error || "Invalid credentials. Please try again.");
+
+      setErr(
+        responseData?.message ||
+        responseData?.error ||
+        "Invalid credentials. Please try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -62,6 +91,7 @@ export default function LoginForm() {
         <Input
           label="Email Address"
           type="email"
+          value={form.email}
           required
           onChange={(e) => setForm({ ...form, email: e.target.value })}
         />
@@ -80,6 +110,7 @@ export default function LoginForm() {
           <Input
             label=""
             isPassword
+            value={form.password}
             required
             onChange={(e) => setForm({ ...form, password: e.target.value })}
           />
@@ -88,7 +119,7 @@ export default function LoginForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-white hover:bg-gray-100 text-black font-medium py-3 rounded-lg text-sm transition-all duration-300"
+          className="w-full bg-white hover:bg-gray-100 text-black font-medium py-3 rounded-lg text-sm transition-all duration-300 disabled:opacity-50 mt-2"
         >
           {loading ? "Signing In..." : "Sign In"}
         </button>

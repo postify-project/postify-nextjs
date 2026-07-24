@@ -16,7 +16,8 @@ function ResetFallback() {
 
 function ResetContainer() {
   const searchParams = useSearchParams();
-  const token = searchParams.get("token") || "";
+  // Extracts token whether query param is ?q= or ?token=
+  const token = searchParams.get("q") || searchParams.get("token") || "";
 
   return <ResetPasswordForm token={token} />;
 }

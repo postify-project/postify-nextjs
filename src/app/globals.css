@@ -24,3 +24,19 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Custom styling for react-phone-number-input */
+.PhoneInputInput {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: white;
+  width: 100%;
+  font-size: 0.875rem;
+}
+
+.PhoneInputCountrySelect {
+  background: #1e293b;
+  color: white;
+}
+
