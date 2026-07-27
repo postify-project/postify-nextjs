@@ -7,6 +7,7 @@ import Input from "@/app/components/Input";
 import GoogleButton from "@/app/components/auth/GoogleAuthButton";
 import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
 import "react-phone-number-input/style.css";
+import FacebookAuthButton from "./FacebookAuthButton";
 
 export default function SignUpForm() {
   const router = useRouter();
@@ -19,6 +20,8 @@ export default function SignUpForm() {
   });
   const [err, setErr] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const BACKEND = process.env.NEXT_PUBLIC_API_URL;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -71,7 +74,7 @@ export default function SignUpForm() {
       console.log("payload--> ", payload);
 
       await api.post(
-        "https://postify-main-backend.vercel.app/api/v1/auth/signup",
+        `${BACKEND}/auth/signup`,
         payload
       );
 
@@ -173,6 +176,10 @@ export default function SignUpForm() {
 
       {/* Google Interactive Action */}
       <GoogleButton onError={(msg) => setErr(msg)} />
+      <div className="mt-4">
+        <FacebookAuthButton onError={(msg) => setErr(msg)} />
+      </div>
+
 
       <p className="text-center text-xs text-gray-400 mt-6">
         Already have an account?{" "}

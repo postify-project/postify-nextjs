@@ -14,6 +14,8 @@ export default function OtpForm({ email }: OtpFormProps) {
   const [err, setErr] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const BACKEND = process.env.NEXT_PUBLIC_API_URL;
+
   const handleVerify = async (e: React.FormEvent) => {
     e.preventDefault();
     setErr("");
@@ -35,7 +37,7 @@ export default function OtpForm({ email }: OtpFormProps) {
       };
 
       await api.post(
-        "https://postify-main-backend.vercel.app/api/v1/auth/otp-verify",
+        `${BACKEND}/auth/otp-verify`,
         payload
       );
 

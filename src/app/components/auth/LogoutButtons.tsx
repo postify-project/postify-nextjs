@@ -9,6 +9,8 @@ export default function LogoutButtons() {
   const [loadingType, setLoadingType] = useState<"single" | "all" | null>(null);
   const [err, setErr] = useState("");
 
+  const BACKEND = process.env.NEXT_PUBLIC_API_URL;
+
   const handleLogout = async (isLogoutAll: boolean = false) => {
     setErr("");
     const type = isLogoutAll ? "all" : "single";
@@ -17,8 +19,8 @@ export default function LogoutButtons() {
     const token = Cookies.get("token");
 
     const endpoint = isLogoutAll
-      ? "https://postify-main-backend.vercel.app/api/v1/auth/logout-all"
-      : "https://postify-main-backend.vercel.app/api/v1/auth/logout";
+      ? `${BACKEND}/auth/logout-all`
+      : `${BACKEND}/auth/logout`;
 
     try {
       if (token) {

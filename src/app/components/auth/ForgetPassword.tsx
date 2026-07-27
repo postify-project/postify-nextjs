@@ -10,6 +10,8 @@ export default function ForgotPasswordForm() {
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
+const BACKEND = process.env.NEXT_PUBLIC_API_URL;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErr("");
@@ -24,7 +26,7 @@ export default function ForgotPasswordForm() {
 
     try {
       const response = await api.post(
-        "https://postify-main-backend.vercel.app/api/v1/auth/forget-password",
+        `${BACKEND}/auth/forget-password`,
         { email: trimmedEmail }
       );
       console.log(response);

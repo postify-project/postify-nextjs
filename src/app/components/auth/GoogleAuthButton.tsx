@@ -1,9 +1,22 @@
 "use client";
 
-export default function GoogleButton() {
+const BACKEND = process.env.NEXT_PUBLIC_API_URL;
+
+interface GoogleButtonProps {
+  onError?: (message: string) => void;
+}
+
+export default function GoogleButton({ onError }: GoogleButtonProps) {
   const handleGoogleAuth = () => {
-    window.location.href =
-      "https://postify-main-backend.vercel.app/api/v1/auth/google";
+    try {
+      window.location.href =
+        `${BACKEND}/auth/google`;
+    } catch (err) {
+      console.error("Google auth redirect error:", err);
+      if (onError) {
+        onError("Failed to initiate Google authentication. Please try again.");
+      }
+    }
   };
 
   return (

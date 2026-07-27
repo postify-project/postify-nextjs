@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import GoogleAuthHandler from "@/app/components/auth/GoogleAuthHandler";
 import LogoutButtons from "@/app/components/auth/LogoutButtons";
+import OAuthHandler from "../components/auth/OAuthHandler";
 
 export default function DashboardPage() {
   return (
@@ -12,12 +13,12 @@ export default function DashboardPage() {
           </div>
         }
       >
-        <GoogleAuthHandler>
+        <OAuthHandler>
           <div className="flex flex-col items-center gap-6">
             <h1 className="text-3xl font-bold text-white">Dashboard</h1>
             <LogoutButtons />
           </div>
-        </GoogleAuthHandler>
+        </OAuthHandler>
       </Suspense>
     </main>
   );

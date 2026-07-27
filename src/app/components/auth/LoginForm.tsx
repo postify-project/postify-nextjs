@@ -6,12 +6,15 @@ import Cookies from "js-cookie";
 import api from "@/lib/axios";
 import Input from "@/app/components/Input";
 import GoogleButton from "@/app/components/auth/GoogleAuthButton";
+import FacebookAuthButton from "./FacebookAuthButton";
 
 export default function LoginForm() {
   const router = useRouter();
   const [form, setForm] = useState({ email: "", password: "" });
   const [err, setErr] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const BACKEND = process.env.NEXT_PUBLIC_API_URL;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,10 +34,10 @@ export default function LoginForm() {
       };
 
       const response = await api.post(
-        "https://postify-main-backend.vercel.app/api/v1/auth/login",
+        `${BACKEND}/auth/login`,
         payload
       );
-      console.log("response --> ",response);
+      console.log("response --> ", response);
 
       // Extract token and user data based on backend response shape
       const { token, data: user } = response.data;
@@ -134,6 +137,9 @@ export default function LoginForm() {
       </div>
 
       <GoogleButton onError={(msg) => setErr(msg)} />
+      <div className="mt-4">
+        <FacebookAuthButton onError={(msg) => setErr(msg)} />
+      </div>
 
       <p className="text-center text-xs text-gray-400 mt-6">
         Don't have an account?{" "}

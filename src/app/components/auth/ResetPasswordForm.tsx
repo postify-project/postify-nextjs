@@ -15,6 +15,8 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
   const [msg, setMsg] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const BACKEND = process.env.NEXT_PUBLIC_API_URL;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErr("");
@@ -30,7 +32,7 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
 
     try {
       const response = await api.post(
-        "https://postify-main-backend.vercel.app/api/v1/auth/change-password",
+        `${BACKEND}/auth/change-password`,
         {
           newPassword: form.newPassword,
         },
