@@ -10,7 +10,12 @@ interface NavItem {
   icon: React.ReactNode;
 }
 
-export default function Sidebar() {
+interface SidebarProps {
+  isOpen?: boolean;
+  onClose?: () => void;
+}
+
+export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
   const pathname = usePathname();
 
   const navItems: NavItem[] = [
@@ -236,43 +241,64 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="fixed top-[52px] bottom-0 left-0 z-40 flex w-[60px] flex-col justify-between border-r border-pink-100 bg-white p-2 md:w-[200px] md:p-3 overflow-y-auto scrollbar-none font-inter">
-      {/* Navigation Links */}
-      <nav className="flex flex-col gap-1">
-        {navItems.map((item) => {
-          const isActive = pathname === item.path;
+    <>
+      {/* Mobile Backdrop */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 z-30 bg-slate-950/80 backdrop-blur-sm lg:hidden"
+          onClick={onClose}
+        />
+      )}
 
-          return (
-            <Link
-              key={item.path}
-              href={item.path}
-              className={`group flex items-center gap-2.5 rounded-lg px-2 py-2 text-xs font-medium transition-all duration-150 justify-center md:justify-start md:px-3 ${
-                isActive
-                  ? "border border-pink-200 bg-pink-50 text-pink-600 shadow-sm shadow-pink-500/5 font-semibold"
-                  : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
-              }`}
-            >
-              <span
-                className={`flex items-center justify-center transition-colors duration-150 ${
+      <aside
+        className={`fixed top-[52px] bottom-0 left-0 z-40 flex flex-col justify-between border-r border-slate-800/80 bg-slate-950 p-2 font-inter transition-transform duration-200 ease-in-out md:p-3 ${
+          isOpen
+            ? "translate-x-0 w-[200px]"
+            : "-translate-x-full lg:translate-x-0"
+        } w-[60px] lg:w-[200px] overflow-y-auto scrollbar-none`}
+      >
+        {/* Navigation Links */}
+        <nav className="flex flex-col gap-1">
+          {navItems.map((item) => {
+            const isActive = pathname === item.path;
+
+            return (
+              <Link
+                key={item.path}
+                href={item.path}
+                onClick={onClose}
+                className={`group flex items-center gap-2.5 rounded-lg px-2 py-2 text-xs font-medium transition-all duration-150 justify-center lg:justify-start lg:px-3 ${
                   isActive
-                    ? "text-pink-500"
-                    : "text-slate-400 group-hover:text-slate-700"
+                    ? "border border-indigo-500/30 bg-indigo-500/10 text-indigo-400 font-semibold"
+                    : "text-slate-400 hover:bg-slate-900 hover:text-slate-200"
                 }`}
               >
-                {item.icon}
-              </span>
-              <span className="hidden truncate md:inline">{item.label}</span>
-            </Link>
-          );
-        })}
-      </nav>
+                <span
+                  className={`flex items-center justify-center transition-colors duration-150 ${
+                    isActive
+                      ? "text-indigo-400"
+                      : "text-slate-400 group-hover:text-slate-200"
+                  }`}
+                >
+                  {item.icon}
+                </span>
+                <span
+                  className={`${isOpen ? "inline" : "hidden"} truncate lg:inline`}
+                >
+                  {item.label}
+                </span>
+              </Link>
+            );
+          })}
+        </nav>
 
-      {/* Footer Details */}
-      <div className="hidden border-t border-pink-100 pt-3 md:block">
-        <div className="text-center font-outfit text-[11px] font-semibold text-slate-500">
-          Postify <span className="text-pink-500">v1.0.0</span>
+        {/* Footer Details */}
+        <div className="hidden border-t border-slate-800/80 pt-3 lg:block">
+          <div className="text-center font-outfit text-[11px] font-semibold text-slate-500">
+            Postify <span className="text-indigo-400">v1.0.0</span>
+          </div>
         </div>
-      </div>
-    </aside>
+      </aside>
+    </>
   );
 }
