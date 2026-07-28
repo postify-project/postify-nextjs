@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Cookies from "js-cookie";
 import api from "@/lib/axios";
 import Input from "@/app/components/Input";
 
@@ -15,26 +14,41 @@ export default function OtpForm({ email }: OtpFormProps) {
   const [err, setErr] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const BACKEND = process.env.NEXT_PUBLIC_API_URL;
+
   const handleVerify = async (e: React.FormEvent) => {
     e.preventDefault();
     setErr("");
+
+    // Trim and format inputs
+    const trimmedOtp = otp.trim().toUpperCase();
+    const trimmedEmail = email ? email.trim() : "";
+
+    if (!trimmedOtp) {
+      return setErr("Please enter the OTP code.");
+    }
+
     setLoading(true);
 
     try {
-      const response = await api.post("/api/auth/verify-otp", { email, otp });
-      const { token, user } = response.data;
+      const payload = {
+        otp: trimmedOtp,
+        email: trimmedEmail,
+      };
 
-      // Instantly log the user in locally
-      Cookies.set("token", token, {
-        expires: 7,
-        secure: true,
-        sameSite: "strict",
-      });
-      localStorage.setItem("user", JSON.stringify(user));
+      await api.post(
+        `${BACKEND}/auth/otp-verify`,
+        payload
+      );
 
-      router.push("/dashboard");
+      // Successfully verified -> redirect to login page
+      router.push("/login");
     } catch (error: any) {
-      setErr(error.response?.data?.error || "Verification failed.");
+      setErr(
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        "Verification failed."
+      );
     } finally {
       setLoading(false);
     }
@@ -46,7 +60,8 @@ export default function OtpForm({ email }: OtpFormProps) {
         Verify Account
       </h2>
       <p className="text-sm text-gray-400 mb-6">
-        Enter the verification code sent to your email.
+        Enter the verification code sent to{" "}
+        <span className="text-white font-medium">{email}</span>.
       </p>
 
       {err && (
@@ -59,6 +74,7 @@ export default function OtpForm({ email }: OtpFormProps) {
         <Input
           label="Verification OTP Code"
           type="text"
+          value={otp}
           maxLength={6}
           required
           onChange={(e) => setOtp(e.target.value)}
@@ -66,9 +82,9 @@ export default function OtpForm({ email }: OtpFormProps) {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-white hover:bg-gray-100 text-black font-medium py-3 rounded-lg text-sm transition-all duration-300"
+          className="w-full bg-white hover:bg-gray-100 text-black font-medium py-3 rounded-lg text-sm transition-all duration-300 disabled:opacity-50 mt-2"
         >
-          {loading ? "Verifying..." : "Verify & Dashboard"}
+          {loading ? "Verifying..." : "Verify & Proceed to Login"}
         </button>
       </form>
     </div>

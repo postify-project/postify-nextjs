@@ -15,6 +15,8 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
   const [msg, setMsg] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const BACKEND = process.env.NEXT_PUBLIC_API_URL;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErr("");
@@ -23,24 +25,37 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
     if (!token) return setErr("Invalid or missing reset token.");
     if (form.newPassword !== form.confirmPassword)
       return setErr("Passwords do not match.");
+    if (form.newPassword.length < 6)
+      return setErr("Password must be at least 6 characters long.");
+
     setLoading(true);
 
     try {
-      const response = await api.post("/api/auth/reset-password", {
-        token,
-        newPassword: form.newPassword,
-      });
+      const response = await api.post(
+        `${BACKEND}/auth/change-password`,
+        {
+          newPassword: form.newPassword,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-      setMsg(response.data.message || "Password updated successfully!");
+      console.log(response);
 
-      // Redirect to login after a brief moment so they can read the success message
+      setMsg(response.data?.message || "Password updated successfully!");
+
+      // Redirect to login after 2 seconds
       setTimeout(() => {
         router.push("/login");
       }, 2000);
     } catch (error: any) {
       setErr(
-        error.response?.data?.error ||
-          "Failed to reset password. Link may be expired.",
+        error.response?.data?.message ||
+          error.response?.data?.error ||
+          "Failed to reset password. Link may be expired."
       );
     } finally {
       setLoading(false);
@@ -73,12 +88,14 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
           label="New Password"
           isPassword
           required
+          value={form.newPassword}
           onChange={(e) => setForm({ ...form, newPassword: e.target.value })}
         />
         <Input
           label="Confirm New Password"
           isPassword
           required
+          value={form.confirmPassword}
           onChange={(e) =>
             setForm({ ...form, confirmPassword: e.target.value })
           }

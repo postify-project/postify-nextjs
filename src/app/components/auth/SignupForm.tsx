@@ -5,11 +5,15 @@ import Link from "next/link";
 import api from "@/lib/axios";
 import Input from "@/app/components/Input";
 import GoogleButton from "@/app/components/auth/GoogleAuthButton";
+import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
+import "react-phone-number-input/style.css";
+import FacebookAuthButton from "./FacebookAuthButton";
 
 export default function SignUpForm() {
   const router = useRouter();
   const [form, setForm] = useState({
     name: "",
+    phoneNumber: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -17,37 +21,69 @@ export default function SignUpForm() {
   const [err, setErr] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const BACKEND = process.env.NEXT_PUBLIC_API_URL;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErr("");
 
-    // 1. Structural Email Validation
+    // Trim inputs
+    const trimmedName = form.name.trim().replace(/\s+/g, ' ');
+    const trimmedEmail = form.email.trim();
+    const trimmedPhone = form.phoneNumber ? form.phoneNumber.trim() : "";
+
+    // 1. Name Validation
+    if (trimmedName.length < 2) {
+      return setErr("Please enter your full name.");
+    }
+
+    // 2. Structural Email Validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(form.email)) {
+    if (!emailRegex.test(trimmedEmail)) {
       return setErr("Please enter a valid email address.");
     }
 
-    // 2. Strict Password Character Validation
+    // 3. International Phone Number Validation via libphonenumber
+    if (!trimmedPhone || !isValidPhoneNumber(trimmedPhone)) {
+      return setErr("Please enter a valid phone number for the selected country.");
+    }
+
+    // 4. Strict Password Character Validation
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
     if (!passwordRegex.test(form.password)) {
       return setErr(
-        "Password must be at least 8 characters long, contain an uppercase letter, and a number.",
+        "Password must be at least 8 characters long, contain an uppercase letter, and a number."
       );
     }
 
-    // 3. Confirm Equality Matcher
+    // 5. Confirm Equality Matcher
     if (form.password !== form.confirmPassword) {
-      return setErr("Passwords do not match");
+      return setErr("Passwords do not match.");
     }
 
     setLoading(true);
 
     try {
-      await api.post("/api/auth/signup", form);
-      router.push(`/verify-otp?email=${encodeURIComponent(form.email)}`);
+      const payload = {
+        name: trimmedName,
+        phoneNumber: trimmedPhone,
+        email: trimmedEmail,
+        password: form.password,
+      };
+
+      console.log("payload--> ", payload);
+
+      await api.post(
+        `${BACKEND}/auth/signup`,
+        payload
+      );
+
+      router.push(`/verify-otp?email=${encodeURIComponent(trimmedEmail)}`);
     } catch (error: any) {
       setErr(
-        error.response?.data?.error || "An error occurred during sign up.",
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        "An error occurred during sign up."
       );
     } finally {
       setLoading(false);
@@ -72,24 +108,48 @@ export default function SignUpForm() {
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <Input
           label="Full Name"
+          value={form.name}
           required
           onChange={(e) => setForm({ ...form, name: e.target.value })}
         />
+
+        {/* International Phone Input Container */}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-xs font-medium text-gray-300">
+            Phone Number <span className="text-red-400">*</span>
+          </label>
+          <div className="custom-phone-input dark-theme">
+            <PhoneInput
+              defaultCountry="US"
+              international
+              withCountryCallingCode
+              value={form.phoneNumber}
+              onChange={(value) =>
+                setForm({ ...form, phoneNumber: value || "" })
+              }
+              className="flex items-center gap-2 w-full bg-[#1E293B]/50 border border-[#1E293B] rounded-lg p-2.5 text-sm text-white focus-within:border-sky-500 transition-colors"
+            />
+          </div>
+        </div>
+
         <Input
           label="Email Address"
           type="email"
+          value={form.email}
           required
           onChange={(e) => setForm({ ...form, email: e.target.value })}
         />
         <Input
           label="Password"
           isPassword
+          value={form.password}
           required
           onChange={(e) => setForm({ ...form, password: e.target.value })}
         />
         <Input
           label="Confirm Password"
           isPassword
+          value={form.confirmPassword}
           required
           onChange={(e) =>
             setForm({ ...form, confirmPassword: e.target.value })
@@ -116,6 +176,10 @@ export default function SignUpForm() {
 
       {/* Google Interactive Action */}
       <GoogleButton onError={(msg) => setErr(msg)} />
+      <div className="mt-4">
+        <FacebookAuthButton onError={(msg) => setErr(msg)} />
+      </div>
+
 
       <p className="text-center text-xs text-gray-400 mt-6">
         Already have an account?{" "}
@@ -123,6 +187,7 @@ export default function SignUpForm() {
           Log in
         </Link>
       </p>
+
     </div>
   );
 }
