@@ -10,116 +10,120 @@ export default function AIVideoGeneratorPage() {
   const handleGenerate = () => {
     if (!topic.trim()) return;
     setIsGenerating(true);
-    // Simulate generation timeout
     setTimeout(() => {
       setIsGenerating(false);
     }, 3000);
   };
 
   return (
-    <div className="mx-auto max-w-[1200px] animate-fade-in p-6">
-      {/* Page Header */}
+    <div className="mx-auto max-w-4xl px-4 py-8 text-slate-100 antialiased selection:bg-indigo-500/20">
+      {/* Header */}
       <header className="mb-8 flex items-center gap-4">
-        {/* Decorative Video Icon Box */}
-        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-amber-500 text-[#0e1017] shadow-[0_0_20px_rgba(245,158,11,0.2)]">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M23 7a2 2 0 0 0-2.45-1.45L16 7V5a2 2 0 0 0-2-2H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2l4.55 1.45A2 2 0 0 0 23 17V7z"/>
+        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-400 ring-1 ring-indigo-500/20">
+          <svg
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M23 7a2 2 0 0 0-2.45-1.45L16 7V5a2 2 0 0 0-2-2H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2l4.55 1.45A2 2 0 0 0 23 17V7z" />
           </svg>
         </div>
         <div>
-          <div className="flex items-center gap-2">
-            <span className="text-lg">🎬</span>
-            <h1 className="text-xl font-bold tracking-tight text-white font-outfit sm:text-2xl">
-              AI Video Generator
-            </h1>
-          </div>
-          <p className="mt-1 text-xs text-neutral-400">
-            Provide a topic and AI will generate a complete video with script, voiceover, and images!
+          <h1 className="text-xl font-semibold tracking-tight text-white sm:text-2xl">
+            AI Video Generator
+          </h1>
+          <p className="mt-0.5 text-xs text-slate-400">
+            Generate video scripts, voiceovers, and dynamic visuals from prompt
+            inputs
           </p>
         </div>
       </header>
 
-      {/* Main Console Box Container */}
-      <section className="w-full max-w-[800px] rounded-xl border border-white/5 bg-[#0f111a] p-6 shadow-2xl">
-        <div className="flex flex-col gap-6">
-          
+      {/* Main Form Box */}
+      <section className="rounded-2xl border border-slate-800/80 bg-[#111623] p-6 shadow-sm transition-all duration-200 hover:border-slate-700/80">
+        <div className="space-y-6">
           {/* Input Block: Video Topic */}
-          <div className="flex flex-col gap-2">
-            <label className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase">
-              Video Topic
+          <div className="space-y-2">
+            <label className="text-xs font-medium text-slate-300">
+              Video Topic or Prompt
             </label>
             <textarea
               value={topic}
               onChange={(e) => setTopic(e.target.value)}
-              placeholder="E.g., 3 amazing facts about space, or Health benefits of apples..."
-              className="h-28 w-full resize-none rounded-lg border border-white/5 bg-[#090a0f] p-4 text-xs leading-relaxed text-white placeholder-neutral-600 transition-all duration-150 focus:border-indigo-500/30 focus:outline-none focus:ring-1 focus:ring-indigo-500/30"
+              placeholder="E.g., 3 amazing facts about deep space exploration, or simple health benefits of daily walking..."
+              className="h-32 w-full resize-none rounded-xl border border-slate-800 bg-slate-950/60 p-3.5 text-xs text-slate-200 placeholder:text-slate-500 outline-none transition-all duration-150 focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30"
             />
           </div>
 
           {/* Selector Block: Voiceover Language */}
-          <div className="flex flex-col gap-2">
-            <label className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase">
+          <div className="space-y-2">
+            <label className="text-xs font-medium text-slate-300">
               Voiceover Language
             </label>
-            <div className="flex items-center gap-2.5">
-              {/* Urdu Button Tab */}
-              <button
-                type="button"
-                onClick={() => setLanguage("urdu")}
-                className={`flex cursor-pointer items-center gap-1.5 rounded-md px-3.5 py-1.75 text-xs font-semibold transition-all duration-150 select-none ${
-                  language === "urdu"
-                    ? "bg-indigo-600 text-white shadow-[0_0_16px_rgba(79,70,229,0.4)]"
-                    : "border border-white/5 bg-[#090a0f] text-neutral-400 hover:border-white/10 hover:text-white"
-                }`}
-              >
-                <span className="rounded bg-white/10 px-1 py-0.25 text-[9px] font-bold tracking-wide uppercase">
-                  pk
-                </span>
-                Urdu
-              </button>
-
-              {/* English Button Tab */}
-              <button
-                type="button"
-                onClick={() => setLanguage("english")}
-                className={`flex cursor-pointer items-center gap-1.5 rounded-md px-3.5 py-1.75 text-xs font-semibold transition-all duration-150 select-none ${
-                  language === "english"
-                    ? "bg-indigo-600 text-white shadow-[0_0_16px_rgba(79,70,229,0.4)]"
-                    : "border border-white/5 bg-[#090a0f] text-neutral-400 hover:border-white/10 hover:text-white"
-                }`}
-              >
-                <span className="rounded bg-white/10 px-1 py-0.25 text-[9px] font-bold tracking-wide uppercase">
-                  gb
-                </span>
-                English
-              </button>
+            <div className="flex items-center gap-2">
+              {[
+                { id: "urdu", label: "Urdu", region: "PK" },
+                { id: "english", label: "English", region: "US" },
+              ].map((lang) => {
+                const active = language === lang.id;
+                return (
+                  <button
+                    key={lang.id}
+                    type="button"
+                    onClick={() => setLanguage(lang.id as "urdu" | "english")}
+                    className={`flex cursor-pointer items-center gap-2 rounded-xl px-4 py-2 text-xs font-medium transition-all duration-150 ${
+                      active
+                        ? "bg-indigo-600/15 text-indigo-400 ring-1 ring-indigo-500/30"
+                        : "border border-slate-800 bg-slate-900/40 text-slate-400 hover:border-slate-700 hover:text-slate-200"
+                    }`}
+                  >
+                    <span className="rounded bg-slate-800 px-1 py-0.5 font-mono text-[9px] uppercase text-slate-300">
+                      {lang.region}
+                    </span>
+                    <span>{lang.label}</span>
+                  </button>
+                );
+              })}
             </div>
           </div>
 
-          {/* Submit Action Trigger Button */}
+          {/* Action Trigger Button */}
           <button
             type="button"
             onClick={handleGenerate}
             disabled={isGenerating || !topic.trim()}
-            className={`mt-2 flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 py-3.5 text-xs font-bold text-white shadow-[0_4px_20px_rgba(245,158,11,0.25)] transition-all duration-200 select-none ${
+            className={`flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl py-3.5 text-xs font-semibold transition-all duration-150 ${
               isGenerating || !topic.trim()
-                ? "opacity-50 cursor-not-allowed"
-                : "hover:-translate-y-[1px] hover:from-amber-400 hover:to-orange-500 hover:shadow-[0_6px_24px_rgba(245,158,11,0.4)] active:translate-y-0"
+                ? "cursor-not-allowed border border-slate-800 bg-slate-900/50 text-slate-600"
+                : "bg-indigo-600 text-white shadow-md hover:bg-indigo-500 active:scale-[0.99]"
             }`}
           >
             {isGenerating ? (
               <>
                 <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-                Generating Project Content...
+                <span>Generating Script & Visuals...</span>
               </>
             ) : (
               <>
-                <span className="text-sm font-bold">$</span>
-                Generate Video (Wait 1-2 mins)
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                >
+                  <polygon points="5 3 19 12 5 21 5 3" />
+                </svg>
+                <span>Generate Complete Video</span>
               </>
             )}
           </button>
-
         </div>
       </section>
     </div>

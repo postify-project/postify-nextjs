@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 
-// Preset Options for Dropdowns
 const ACCOUNT_TYPES = ["Business / Company", "Influencer / Creator"];
 
 const INDUSTRIES = [
@@ -44,7 +43,7 @@ const CREATOR_PERSONAS = [
 ];
 
 const IMAGERY_STYLES = [
-  "Minimalist & Dark Mode",
+  "Minimalist & Light Mode",
   "Bold, Vibrant & Neon",
   "Real Photography & Clean",
   "Memes, Edgy & High-Energy",
@@ -83,28 +82,27 @@ export default function BrandKitSection({
   setIsModalOpen: externalSetIsModalOpen,
 }: BrandKitSectionProps) {
   const [internalIsModalOpen, setInternalIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [isUploading, setIsUploading] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
 
-  // Sync internal/external modal state
   const isModalOpen = externalIsModalOpen ?? internalIsModalOpen;
   const setIsModalOpen = externalSetIsModalOpen ?? setInternalIsModalOpen;
 
-  // Form State including Description
   const [brandData, setBrandData] = useState({
     accountType: "Business / Company",
     brandName: "",
     brandTagline: "",
-    brandDescription: "", // Added description field
+    brandDescription: "",
     industry: "B2B SaaS & Tech",
     creatorNiche: "Software Development & AI",
     website: "",
-    primaryColor: "#8b5cf6",
-    secondaryColor: "#ec4899",
+    primaryColor: "#ec4899",
+    secondaryColor: "#1e293b",
     logoUrl: "",
     tone: "Professional & Corporate",
     creatorPersona: "The Educational Mentor (Informative & Clear)",
-    imageryStyle: "Minimalist & Dark Mode",
+    imageryStyle: "Minimalist & Light Mode",
     contentFormat: "Short-form Reels & Shorts",
     emojiRule: "Moderate (Bullet points & key accents)",
     primaryCTA: "Link in bio for more details",
@@ -112,7 +110,6 @@ export default function BrandKitSection({
     hashtags: "#buildinpublic #indiehackers #postify",
   });
 
-  // Load saved details from LocalStorage & Listen for global trigger event
   useEffect(() => {
     const checkSaved = () => {
       const stored = localStorage.getItem("postify_brand_kit");
@@ -127,22 +124,24 @@ export default function BrandKitSection({
           console.error("Error reading localStorage", e);
         }
       }
+      setIsLoading(false);
     };
 
     checkSaved();
 
-    // Event listener to open modal directly when Banner button is clicked
     const handleOpenGlobalModal = () => setIsModalOpen(true);
     window.addEventListener("postify_open_brand_modal", handleOpenGlobalModal);
     window.addEventListener("storage", checkSaved);
 
     return () => {
-      window.removeEventListener("postify_open_brand_modal", handleOpenGlobalModal);
+      window.removeEventListener(
+        "postify_open_brand_modal",
+        handleOpenGlobalModal,
+      );
       window.removeEventListener("storage", checkSaved);
     };
   }, [setIsModalOpen]);
 
-  // Upload Logo directly to Cloudinary
   const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -150,15 +149,16 @@ export default function BrandKitSection({
     setIsUploading(true);
     const formData = new FormData();
     formData.append("file", file);
-    // Replace 'postify_preset' with your Cloudinary Unsigned Upload Preset
     formData.append("upload_preset", "postify_preset");
 
     try {
-      // Replace 'your_cloud_name' with your Cloudinary Cloud Name
-      const res = await fetch("https://api.cloudinary.com/v1_1/your_cloud_name/image/upload", {
-        method: "POST",
-        body: formData,
-      });
+      const res = await fetch(
+        "https://api.cloudinary.com/v1_1/your_cloud_name/image/upload",
+        {
+          method: "POST",
+          body: formData,
+        },
+      );
 
       const data = await res.json();
       if (data.secure_url) {
@@ -171,7 +171,6 @@ export default function BrandKitSection({
     }
   };
 
-  // Save to LocalStorage & Mark Finished
   const handleSaveDetails = () => {
     localStorage.setItem("postify_brand_kit", JSON.stringify(brandData));
     localStorage.removeItem("postify_onboarding_skipped");
@@ -181,129 +180,199 @@ export default function BrandKitSection({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 font-inter text-slate-800">
       {/* Top Banner Control Box */}
-      <div className="flex flex-col gap-4 rounded-2xl border border-purple-500/30 bg-gradient-to-r from-purple-900/30 via-indigo-900/20 to-purple-950/30 p-6 md:flex-row md:items-center md:justify-between shadow-xl backdrop-blur-md">
-        <div className="space-y-1">
-          <div className="flex items-center gap-3">
-            <h3 className="text-lg font-bold text-white tracking-tight">Brand Kit & Voice Settings</h3>
-            {isFinished ? (
-              <span className="rounded-full bg-emerald-500/20 px-3 py-1 text-xs font-semibold text-emerald-400 border border-emerald-500/30">
-                ✓ Finished
-              </span>
-            ) : (
-              <span className="rounded-full bg-amber-500/20 px-3 py-1 text-xs font-semibold text-amber-300 border border-amber-500/30">
-                Action Needed
-              </span>
-            )}
-          </div>
-          <p className="text-xs text-neutral-300">
-            Configure preset parameters so AI generates tailored posts for your channel.
-          </p>
-        </div>
-
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="cursor-pointer rounded-xl bg-purple-600 px-6 py-3 text-xs font-bold text-white shadow-lg transition-all hover:bg-purple-500 hover:scale-[1.01] active:scale-[0.99]"
-        >
-          {isFinished ? "Edit Brand Details" : "Start Adding Details"}
-        </button>
-      </div>
-
-      {/* Active Brand Overview Card */}
-      <div className="rounded-2xl border border-white/10 bg-[#0f111a] p-6 shadow-2xl">
-        <div className="mb-6 flex items-center justify-between border-b border-white/10 pb-4">
-          <div>
-            <h3 className="text-sm font-bold text-white">Active Brand Identity</h3>
-            <p className="text-xs text-neutral-400">Current settings stored locally on client.</p>
-          </div>
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="rounded-lg border border-white/10 bg-[#090a0f] px-4 py-2 text-xs font-semibold text-neutral-300 transition-colors hover:text-white"
-          >
-            Configure
-          </button>
-        </div>
-
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
-          <div className="rounded-xl border border-white/5 bg-[#090a0f] p-4">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-400 block mb-2">Identity & Logo</span>
+      <div className="group relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-6 md:p-7 shadow-sm transition-all duration-300 hover:shadow-md">
+        <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+          <div className="space-y-1.5">
             <div className="flex items-center gap-3">
-              {brandData.logoUrl ? (
-                <img src={brandData.logoUrl} alt="Logo" className="h-8 w-8 rounded-lg object-cover border border-white/10" />
+              <h3 className="font-outfit text-xl font-bold tracking-tight text-slate-900">
+                Brand Kit & Voice Engine
+              </h3>
+              {isLoading ? (
+                <span className="h-5 w-20 animate-pulse rounded-full bg-slate-100" />
+              ) : isFinished ? (
+                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-600/20">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />{" "}
+                  Configured
+                </span>
               ) : (
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-purple-600/30 text-xs font-bold text-purple-300 border border-purple-500/30">
-                  {brandData.brandName ? brandData.brandName[0] : "B"}
-                </div>
+                <span className="inline-flex items-center gap-1 rounded-full bg-rose-50 px-2.5 py-0.5 text-xs font-semibold text-rose-700 ring-1 ring-inset ring-rose-600/20">
+                  <span className="h-1.5 w-1.5 rounded-full bg-rose-500 animate-pulse" />{" "}
+                  Pending
+                </span>
               )}
-              <div>
-                <span className="text-xs font-bold text-white block">{brandData.brandName || "Not Configured"}</span>
-                <span className="text-[11px] text-neutral-400 block truncate max-w-[180px]">{brandData.brandTagline || "No tagline added"}</span>
-              </div>
             </div>
-          </div>
-
-          <div className="rounded-xl border border-white/5 bg-[#090a0f] p-4">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-400 block mb-2">Type & Tone</span>
-            <p className="text-xs font-bold text-purple-400">{brandData.accountType}</p>
-            <p className="mt-1 truncate text-[11px] text-neutral-300">
-              {brandData.accountType === "Influencer / Creator" ? brandData.creatorPersona : brandData.tone}
+            <p className="text-xs leading-relaxed text-slate-500 max-w-xl">
+              Set your target audience, colors, and tone guidelines to let AI
+              auto-craft posts tailored specifically to your agency or creator
+              handle.
             </p>
           </div>
 
-          <div className="rounded-xl border border-white/5 bg-[#090a0f] p-4">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-400 block mb-2">Brand Palette</span>
-            <div className="mt-2 flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <span className="h-5 w-5 rounded-full border border-white/20 shadow-sm" style={{ backgroundColor: brandData.primaryColor }} />
-                <span className="text-xs font-mono text-neutral-300">{brandData.primaryColor}</span>
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="shrink-0 cursor-pointer rounded-xl bg-slate-900 px-5 py-3 text-xs font-semibold text-white shadow-sm transition-all duration-200 hover:bg-rose-600 hover:shadow-rose-500/10 active:scale-[0.98]"
+          >
+            {isFinished ? "Edit Parameters" : "Configure Brand Kit"}
+          </button>
+        </div>
+      </div>
+
+      {/* Active Brand Overview Card */}
+      <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm">
+        <div className="mb-6 flex items-center justify-between border-b border-slate-100 pb-4">
+          <div>
+            <h3 className="font-outfit text-sm font-bold text-slate-900">
+              Active Identity Overview
+            </h3>
+            <p className="text-xs text-slate-500">
+              Live configurations stored locally on your device.
+            </p>
+          </div>
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="rounded-lg border border-slate-200 bg-slate-50 px-3.5 py-1.5 text-xs font-medium text-slate-700 transition-colors hover:bg-slate-100 hover:text-slate-900"
+          >
+            Manage
+          </button>
+        </div>
+
+        {isLoading ? (
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            {[1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="animate-pulse rounded-xl border border-slate-100 bg-slate-50/50 p-4 space-y-3"
+              >
+                <div className="h-3 w-16 rounded bg-slate-200" />
+                <div className="flex items-center gap-3">
+                  <div className="h-9 w-9 rounded-lg bg-slate-200" />
+                  <div className="space-y-1.5 flex-1">
+                    <div className="h-3 w-24 rounded bg-slate-200" />
+                    <div className="h-2.5 w-32 rounded bg-slate-100" />
+                  </div>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="h-5 w-5 rounded-full border border-white/20 shadow-sm" style={{ backgroundColor: brandData.secondaryColor }} />
-                <span className="text-xs font-mono text-neutral-300">{brandData.secondaryColor}</span>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            {/* Identity Tile */}
+            <div className="rounded-xl border border-slate-100 bg-slate-50/60 p-4 transition-all duration-200 hover:bg-slate-50 hover:border-slate-200">
+              <span className="mb-2 block text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                Brand & Logo
+              </span>
+              <div className="flex items-center gap-3">
+                {brandData.logoUrl ? (
+                  <img
+                    src={brandData.logoUrl}
+                    alt="Logo"
+                    className="h-9 w-9 rounded-lg border border-slate-200 object-cover shadow-sm"
+                  />
+                ) : (
+                  <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white font-outfit text-xs font-bold text-slate-800 shadow-sm">
+                    {brandData.brandName ? brandData.brandName[0] : "P"}
+                  </div>
+                )}
+                <div className="overflow-hidden">
+                  <span className="block truncate font-outfit text-xs font-bold text-slate-900">
+                    {brandData.brandName || "Unconfigured"}
+                  </span>
+                  <span className="block truncate text-[11px] text-slate-500">
+                    {brandData.brandTagline || "No tagline assigned"}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Classification Tile */}
+            <div className="rounded-xl border border-slate-100 bg-slate-50/60 p-4 transition-all duration-200 hover:bg-slate-50 hover:border-slate-200">
+              <span className="mb-2 block text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                Classification & Persona
+              </span>
+              <p className="font-outfit text-xs font-bold text-rose-600">
+                {brandData.accountType}
+              </p>
+              <p className="mt-0.5 truncate text-[11px] font-medium text-slate-600">
+                {brandData.accountType === "Influencer / Creator"
+                  ? brandData.creatorPersona
+                  : brandData.tone}
+              </p>
+            </div>
+
+            {/* Palette Tile */}
+            <div className="rounded-xl border border-slate-100 bg-slate-50/60 p-4 transition-all duration-200 hover:bg-slate-50 hover:border-slate-200">
+              <span className="mb-2 block text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                Color Palette
+              </span>
+              <div className="mt-2.5 flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <span
+                    className="h-4 w-4 rounded-full border border-slate-300 shadow-sm"
+                    style={{ backgroundColor: brandData.primaryColor }}
+                  />
+                  <span className="font-mono text-xs text-slate-600">
+                    {brandData.primaryColor}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span
+                    className="h-4 w-4 rounded-full border border-slate-300 shadow-sm"
+                    style={{ backgroundColor: brandData.secondaryColor }}
+                  />
+                  <span className="font-mono text-xs text-slate-600">
+                    {brandData.secondaryColor}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* LANDSCAPE MODAL */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-md">
-          {/* Expanded to max-w-5xl for wide Landscape view */}
-          <div className="max-h-[92vh] w-full max-w-5xl overflow-y-auto rounded-2xl border border-white/10 bg-[#0c0e17] p-8 text-white shadow-2xl">
-            
-            {/* Header */}
-            <div className="mb-6 flex items-center justify-between border-b border-white/10 pb-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/30 p-4 backdrop-blur-sm transition-opacity">
+          <div className="max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-3xl border border-slate-200 bg-white p-7 text-slate-800 shadow-2xl">
+            {/* Modal Header */}
+            <div className="mb-6 flex items-center justify-between border-b border-slate-100 pb-4">
               <div>
-                <h2 className="text-xl font-bold text-white tracking-tight">Configure Brand Kit & Language</h2>
-                <p className="text-xs text-neutral-400 mt-1">Select dropdown presets to shape post generation.</p>
+                <h2 className="font-outfit text-xl font-bold tracking-tight text-slate-900">
+                  Brand Kit Setup
+                </h2>
+                <p className="mt-0.5 text-xs text-slate-500">
+                  Define structural parameters for your custom AI publishing
+                  pipeline.
+                </p>
               </div>
               <button
                 type="button"
                 onClick={() => setIsModalOpen(false)}
-                className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/5 text-lg font-bold text-neutral-400 hover:bg-white/10 hover:text-white"
+                className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:border-slate-300 hover:text-slate-700 transition-colors"
               >
                 ✕
               </button>
             </div>
 
-            {/* Form Fields Grid - Landscape Layout */}
             <div className="space-y-6">
-              
-              {/* Account Type Selector Bar */}
-              <div className="rounded-xl border border-white/10 bg-[#06070b] p-4">
-                <label className="mb-2 block text-xs font-bold text-purple-400 uppercase tracking-wider">Account Classification</label>
-                <div className="grid grid-cols-2 gap-3">
+              {/* Account Type Tabs */}
+              <div>
+                <label className="mb-2 block text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                  Account Type
+                </label>
+                <div className="grid grid-cols-2 gap-2 rounded-xl bg-slate-100/80 p-1">
                   {ACCOUNT_TYPES.map((type) => (
                     <button
                       key={type}
                       type="button"
-                      onClick={() => setBrandData({ ...brandData, accountType: type })}
-                      className={`py-3 px-4 rounded-xl text-xs font-bold transition-all border ${
+                      onClick={() =>
+                        setBrandData({ ...brandData, accountType: type })
+                      }
+                      className={`rounded-lg py-2 text-xs font-semibold transition-all duration-150 ${
                         brandData.accountType === type
-                          ? "bg-purple-600 text-white border-purple-500 shadow-lg"
-                          : "bg-[#0f111a] text-neutral-400 border-white/10 hover:text-white"
+                          ? "bg-white text-slate-900 shadow-sm"
+                          : "text-slate-500 hover:text-slate-800"
                       }`}
                     >
                       {type}
@@ -312,208 +381,318 @@ export default function BrandKitSection({
                 </div>
               </div>
 
-              {/* SECTION 1: IDENTITY */}
-              <div className="space-y-4">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-neutral-400">1. Core Identity & Story</h4>
+              {/* Core Identity */}
+              <div className="space-y-3">
+                <h4 className="font-outfit text-xs font-bold uppercase tracking-wider text-slate-900">
+                  Core Identity
+                </h4>
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <div>
-                    <label className="mb-1.5 block text-xs font-semibold text-neutral-300">
-                      {brandData.accountType === "Influencer / Creator" ? "Creator / Channel Name" : "Brand Name"}
+                    <label className="mb-1 block text-xs font-medium text-slate-700">
+                      {brandData.accountType === "Influencer / Creator"
+                        ? "Creator / Channel Name"
+                        : "Brand Name"}
                     </label>
                     <input
                       type="text"
                       placeholder="e.g. Postify"
                       value={brandData.brandName}
-                      onChange={(e) => setBrandData({ ...brandData, brandName: e.target.value })}
-                      className="w-full rounded-xl border border-white/10 bg-[#06070b] px-4 py-3 text-xs text-white outline-none focus:border-purple-500 transition-all"
+                      onChange={(e) =>
+                        setBrandData({
+                          ...brandData,
+                          brandName: e.target.value,
+                        })
+                      }
+                      className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-xs text-slate-900 outline-none transition-all focus:border-slate-900 focus:ring-1 focus:ring-slate-900"
                     />
                   </div>
 
                   <div>
-                    <label className="mb-1.5 block text-xs font-semibold text-neutral-300">Tagline / Hook</label>
+                    <label className="mb-1 block text-xs font-medium text-slate-700">
+                      Tagline
+                    </label>
                     <input
                       type="text"
-                      placeholder="e.g. AI Social Media Engine for Creators"
+                      placeholder="e.g. AI Social Engine for Developers"
                       value={brandData.brandTagline}
-                      onChange={(e) => setBrandData({ ...brandData, brandTagline: e.target.value })}
-                      className="w-full rounded-xl border border-white/10 bg-[#06070b] px-4 py-3 text-xs text-white outline-none focus:border-purple-500 transition-all"
+                      onChange={(e) =>
+                        setBrandData({
+                          ...brandData,
+                          brandTagline: e.target.value,
+                        })
+                      }
+                      className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-xs text-slate-900 outline-none transition-all focus:border-slate-900 focus:ring-1 focus:ring-slate-900"
                     />
                   </div>
                 </div>
 
-                {/* Brand Description Input */}
                 <div>
-                  <label className="mb-1.5 block text-xs font-semibold text-neutral-300">
-                    Brand Story & Overview Description
+                  <label className="mb-1 block text-xs font-medium text-slate-700">
+                    Brand Context
                   </label>
                   <textarea
                     rows={3}
-                    placeholder="Describe what your brand or channel does, your target market, core goals, and key message..."
+                    placeholder="Briefly describe what your brand does, target users, and key product goals..."
                     value={brandData.brandDescription}
-                    onChange={(e) => setBrandData({ ...brandData, brandDescription: e.target.value })}
-                    className="w-full rounded-xl border border-white/10 bg-[#06070b] p-4 text-xs text-white outline-none focus:border-purple-500 transition-all resize-none"
+                    onChange={(e) =>
+                      setBrandData({
+                        ...brandData,
+                        brandDescription: e.target.value,
+                      })
+                    }
+                    className="w-full resize-none rounded-xl border border-slate-200 bg-white p-3.5 text-xs text-slate-900 outline-none transition-all focus:border-slate-900 focus:ring-1 focus:ring-slate-900"
                   />
                 </div>
               </div>
 
-              {/* SECTION 2: DROPDOWN PRESETS (Landscape 2-Columns) */}
-              <div className="space-y-4">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-neutral-400">2. Niche, Tone & Assets</h4>
-                
+              {/* Niche & Assets */}
+              <div className="space-y-3">
+                <h4 className="font-outfit text-xs font-bold uppercase tracking-wider text-slate-900">
+                  Niche & Assets
+                </h4>
+
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   {brandData.accountType === "Business / Company" ? (
                     <div>
-                      <label className="mb-1.5 block text-xs font-semibold text-neutral-300">Industry / Sector</label>
+                      <label className="mb-1 block text-xs font-medium text-slate-700">
+                        Industry
+                      </label>
                       <select
                         value={brandData.industry}
-                        onChange={(e) => setBrandData({ ...brandData, industry: e.target.value })}
-                        className="w-full cursor-pointer rounded-xl border border-white/10 bg-[#06070b] px-4 py-3 text-xs text-white outline-none focus:border-purple-500"
+                        onChange={(e) =>
+                          setBrandData({
+                            ...brandData,
+                            industry: e.target.value,
+                          })
+                        }
+                        className="w-full cursor-pointer rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-xs text-slate-900 outline-none transition-all focus:border-slate-900"
                       >
                         {INDUSTRIES.map((item) => (
-                          <option key={item} value={item} className="bg-[#0c0e17]">{item}</option>
+                          <option key={item} value={item}>
+                            {item}
+                          </option>
                         ))}
                       </select>
                     </div>
                   ) : (
                     <div>
-                      <label className="mb-1.5 block text-xs font-semibold text-neutral-300">Creator Niche</label>
+                      <label className="mb-1 block text-xs font-medium text-slate-700">
+                        Niche
+                      </label>
                       <select
                         value={brandData.creatorNiche}
-                        onChange={(e) => setBrandData({ ...brandData, creatorNiche: e.target.value })}
-                        className="w-full cursor-pointer rounded-xl border border-white/10 bg-[#06070b] px-4 py-3 text-xs text-white outline-none focus:border-purple-500"
+                        onChange={(e) =>
+                          setBrandData({
+                            ...brandData,
+                            creatorNiche: e.target.value,
+                          })
+                        }
+                        className="w-full cursor-pointer rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-xs text-slate-900 outline-none transition-all focus:border-slate-900"
                       >
                         {CREATOR_NICHES.map((item) => (
-                          <option key={item} value={item} className="bg-[#0c0e17]">{item}</option>
+                          <option key={item} value={item}>
+                            {item}
+                          </option>
                         ))}
                       </select>
                     </div>
                   )}
 
                   <div>
-                    <label className="mb-1.5 block text-xs font-semibold text-neutral-300">
-                      {brandData.accountType === "Influencer / Creator" ? "Creator Persona" : "Brand Tone & Archetype"}
+                    <label className="mb-1 block text-xs font-medium text-slate-700">
+                      {brandData.accountType === "Influencer / Creator"
+                        ? "Persona"
+                        : "Tone Archetype"}
                     </label>
                     <select
-                      value={brandData.accountType === "Influencer / Creator" ? brandData.creatorPersona : brandData.tone}
+                      value={
+                        brandData.accountType === "Influencer / Creator"
+                          ? brandData.creatorPersona
+                          : brandData.tone
+                      }
                       onChange={(e) =>
                         setBrandData({
                           ...brandData,
-                          [brandData.accountType === "Influencer / Creator" ? "creatorPersona" : "tone"]: e.target.value,
+                          [brandData.accountType === "Influencer / Creator"
+                            ? "creatorPersona"
+                            : "tone"]: e.target.value,
                         })
                       }
-                      className="w-full cursor-pointer rounded-xl border border-white/10 bg-[#06070b] px-4 py-3 text-xs text-white outline-none focus:border-purple-500"
+                      className="w-full cursor-pointer rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-xs text-slate-900 outline-none transition-all focus:border-slate-900"
                     >
-                      {(brandData.accountType === "Influencer / Creator" ? CREATOR_PERSONAS : TONE_ARCHETYPES).map((item) => (
-                        <option key={item} value={item} className="bg-[#0c0e17]">{item}</option>
+                      {(brandData.accountType === "Influencer / Creator"
+                        ? CREATOR_PERSONAS
+                        : TONE_ARCHETYPES
+                      ).map((item) => (
+                        <option key={item} value={item}>
+                          {item}
+                        </option>
                       ))}
                     </select>
                   </div>
                 </div>
 
-                {/* Cloudinary & Colors Grid */}
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                   <div>
-                    <label className="mb-1.5 block text-xs font-semibold text-neutral-300">Logo Asset (Cloudinary)</label>
+                    <label className="mb-1 block text-xs font-medium text-slate-700">
+                      Logo Image
+                    </label>
                     <input
                       type="file"
                       accept="image/*"
                       onChange={handleLogoUpload}
-                      className="w-full cursor-pointer text-xs text-neutral-400 file:mr-3 file:rounded-xl file:border-0 file:bg-purple-600/20 file:px-3 file:py-2 file:text-xs file:font-semibold file:text-purple-300 hover:file:bg-purple-600/30"
+                      className="w-full cursor-pointer text-xs text-slate-500 file:mr-2 file:rounded-lg file:border-0 file:bg-slate-100 file:px-3 file:py-1.5 file:text-xs file:font-semibold file:text-slate-700 hover:file:bg-slate-200"
                     />
-                    {isUploading && <p className="mt-1 text-[10px] text-purple-400">Uploading to Cloudinary...</p>}
+                    {isUploading && (
+                      <p className="mt-1.5 text-[10px] font-medium text-rose-600 animate-pulse">
+                        Uploading to Cloudinary...
+                      </p>
+                    )}
                   </div>
 
                   <div>
-                    <label className="mb-1.5 block text-xs font-semibold text-neutral-300">Primary Color</label>
+                    <label className="mb-1 block text-xs font-medium text-slate-700">
+                      Primary Color
+                    </label>
                     <div className="flex items-center gap-2">
                       <input
                         type="color"
                         value={brandData.primaryColor}
-                        onChange={(e) => setBrandData({ ...brandData, primaryColor: e.target.value })}
-                        className="h-10 w-12 cursor-pointer rounded-xl border border-white/10 bg-transparent p-1"
+                        onChange={(e) =>
+                          setBrandData({
+                            ...brandData,
+                            primaryColor: e.target.value,
+                          })
+                        }
+                        className="h-9 w-10 cursor-pointer rounded-lg border border-slate-200 bg-white p-1"
                       />
                       <input
                         type="text"
                         value={brandData.primaryColor}
                         readOnly
-                        className="w-full rounded-xl border border-white/10 bg-[#06070b] px-3 py-2.5 text-xs font-mono text-neutral-300"
+                        className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 font-mono text-xs text-slate-600"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="mb-1.5 block text-xs font-semibold text-neutral-300">Secondary Accent</label>
+                    <label className="mb-1 block text-xs font-medium text-slate-700">
+                      Secondary Accent
+                    </label>
                     <div className="flex items-center gap-2">
                       <input
                         type="color"
                         value={brandData.secondaryColor}
-                        onChange={(e) => setBrandData({ ...brandData, secondaryColor: e.target.value })}
-                        className="h-10 w-12 cursor-pointer rounded-xl border border-white/10 bg-transparent p-1"
+                        onChange={(e) =>
+                          setBrandData({
+                            ...brandData,
+                            secondaryColor: e.target.value,
+                          })
+                        }
+                        className="h-9 w-10 cursor-pointer rounded-lg border border-slate-200 bg-white p-1"
                       />
                       <input
                         type="text"
                         value={brandData.secondaryColor}
                         readOnly
-                        className="w-full rounded-xl border border-white/10 bg-[#06070b] px-3 py-2.5 text-xs font-mono text-neutral-300"
+                        className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 font-mono text-xs text-slate-600"
                       />
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* SECTION 3: FORMATTING RULES */}
-              <div className="space-y-4">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-neutral-400">3. Content Rules & Call-To-Actions</h4>
-                
+              {/* Formatting & Strategy */}
+              <div className="space-y-3">
+                <h4 className="font-outfit text-xs font-bold uppercase tracking-wider text-slate-900">
+                  Formatting & Rules
+                </h4>
+
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <div>
-                    <label className="mb-1.5 block text-xs font-semibold text-neutral-300">Visual & Imagery Style</label>
+                    <label className="mb-1 block text-xs font-medium text-slate-700">
+                      Visual Style
+                    </label>
                     <select
                       value={brandData.imageryStyle}
-                      onChange={(e) => setBrandData({ ...brandData, imageryStyle: e.target.value })}
-                      className="w-full cursor-pointer rounded-xl border border-white/10 bg-[#06070b] px-4 py-3 text-xs text-white outline-none focus:border-purple-500"
+                      onChange={(e) =>
+                        setBrandData({
+                          ...brandData,
+                          imageryStyle: e.target.value,
+                        })
+                      }
+                      className="w-full cursor-pointer rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-xs text-slate-900 outline-none transition-all focus:border-slate-900"
                     >
                       {IMAGERY_STYLES.map((item) => (
-                        <option key={item} value={item} className="bg-[#0c0e17]">{item}</option>
+                        <option key={item} value={item}>
+                          {item}
+                        </option>
                       ))}
                     </select>
                   </div>
 
                   <div>
-                    <label className="mb-1.5 block text-xs font-semibold text-neutral-300">Preferred Post Format</label>
+                    <label className="mb-1 block text-xs font-medium text-slate-700">
+                      Post Format
+                    </label>
                     <select
                       value={brandData.contentFormat}
-                      onChange={(e) => setBrandData({ ...brandData, contentFormat: e.target.value })}
-                      className="w-full cursor-pointer rounded-xl border border-white/10 bg-[#06070b] px-4 py-3 text-xs text-white outline-none focus:border-purple-500"
+                      onChange={(e) =>
+                        setBrandData({
+                          ...brandData,
+                          contentFormat: e.target.value,
+                        })
+                      }
+                      className="w-full cursor-pointer rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-xs text-slate-900 outline-none transition-all focus:border-slate-900"
                     >
                       {CONTENT_FORMATS.map((item) => (
-                        <option key={item} value={item} className="bg-[#0c0e17]">{item}</option>
+                        <option key={item} value={item}>
+                          {item}
+                        </option>
                       ))}
                     </select>
                   </div>
 
                   <div>
-                    <label className="mb-1.5 block text-xs font-semibold text-neutral-300">Emoji Policy</label>
+                    <label className="mb-1 block text-xs font-medium text-slate-700">
+                      Emoji Usage
+                    </label>
                     <select
                       value={brandData.emojiRule}
-                      onChange={(e) => setBrandData({ ...brandData, emojiRule: e.target.value })}
-                      className="w-full cursor-pointer rounded-xl border border-white/10 bg-[#06070b] px-4 py-3 text-xs text-white outline-none focus:border-purple-500"
+                      onChange={(e) =>
+                        setBrandData({
+                          ...brandData,
+                          emojiRule: e.target.value,
+                        })
+                      }
+                      className="w-full cursor-pointer rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-xs text-slate-900 outline-none transition-all focus:border-slate-900"
                     >
                       {EMOJI_RULES.map((item) => (
-                        <option key={item} value={item} className="bg-[#0c0e17]">{item}</option>
+                        <option key={item} value={item}>
+                          {item}
+                        </option>
                       ))}
                     </select>
                   </div>
 
                   <div>
-                    <label className="mb-1.5 block text-xs font-semibold text-neutral-300">Primary Call-To-Action (CTA)</label>
+                    <label className="mb-1 block text-xs font-medium text-slate-700">
+                      Primary Call-To-Action
+                    </label>
                     <select
                       value={brandData.primaryCTA}
-                      onChange={(e) => setBrandData({ ...brandData, primaryCTA: e.target.value })}
-                      className="w-full cursor-pointer rounded-xl border border-white/10 bg-[#06070b] px-4 py-3 text-xs text-white outline-none focus:border-purple-500"
+                      onChange={(e) =>
+                        setBrandData({
+                          ...brandData,
+                          primaryCTA: e.target.value,
+                        })
+                      }
+                      className="w-full cursor-pointer rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-xs text-slate-900 outline-none transition-all focus:border-slate-900"
                     >
                       {CALL_TO_ACTIONS.map((item) => (
-                        <option key={item} value={item} className="bg-[#0c0e17]">{item}</option>
+                        <option key={item} value={item}>
+                          {item}
+                        </option>
                       ))}
                     </select>
                   </div>
@@ -521,47 +700,53 @@ export default function BrandKitSection({
 
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <div>
-                    <label className="mb-1.5 block text-xs font-semibold text-neutral-300">Target Keywords</label>
+                    <label className="mb-1 block text-xs font-medium text-slate-700">
+                      Target Keywords
+                    </label>
                     <input
                       type="text"
                       value={brandData.keywords}
-                      onChange={(e) => setBrandData({ ...brandData, keywords: e.target.value })}
-                      className="w-full rounded-xl border border-white/10 bg-[#06070b] px-4 py-3 text-xs text-white outline-none focus:border-purple-500"
+                      onChange={(e) =>
+                        setBrandData({ ...brandData, keywords: e.target.value })
+                      }
+                      className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-xs text-slate-900 outline-none transition-all focus:border-slate-900 focus:ring-1 focus:ring-slate-900"
                     />
                   </div>
 
                   <div>
-                    <label className="mb-1.5 block text-xs font-semibold text-neutral-300">Default Hashtags</label>
+                    <label className="mb-1 block text-xs font-medium text-slate-700">
+                      Default Hashtags
+                    </label>
                     <input
                       type="text"
                       value={brandData.hashtags}
-                      onChange={(e) => setBrandData({ ...brandData, hashtags: e.target.value })}
-                      className="w-full rounded-xl border border-white/10 bg-[#06070b] px-4 py-3 text-xs text-white outline-none focus:border-purple-500"
+                      onChange={(e) =>
+                        setBrandData({ ...brandData, hashtags: e.target.value })
+                      }
+                      className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-xs text-slate-900 outline-none transition-all focus:border-slate-900 focus:ring-1 focus:ring-slate-900"
                     />
                   </div>
                 </div>
               </div>
-
             </div>
 
-            {/* Actions Footer */}
-            <div className="mt-8 flex items-center justify-end gap-3 border-t border-white/10 pt-5">
+            {/* Modal Actions */}
+            <div className="mt-8 flex items-center justify-end gap-3 border-t border-slate-100 pt-5">
               <button
                 type="button"
                 onClick={() => setIsModalOpen(false)}
-                className="cursor-pointer rounded-xl border border-white/10 px-5 py-2.5 text-xs font-semibold text-neutral-300 transition-colors hover:text-white"
+                className="cursor-pointer rounded-xl border border-slate-200 px-4 py-2.5 text-xs font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900"
               >
                 Cancel
               </button>
               <button
                 type="button"
                 onClick={handleSaveDetails}
-                className="cursor-pointer rounded-xl bg-purple-600 px-7 py-2.5 text-xs font-bold text-white shadow-lg transition-all hover:bg-purple-500"
+                className="cursor-pointer rounded-xl bg-slate-900 px-6 py-2.5 text-xs font-semibold text-white shadow-sm transition-all duration-200 hover:bg-rose-600 active:scale-[0.98]"
               >
-                Save Details & Finish Setup
+                Save Settings
               </button>
             </div>
-
           </div>
         </div>
       )}
