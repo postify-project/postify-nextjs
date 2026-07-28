@@ -42,7 +42,7 @@ export default function BrandBanner() {
       </div>
 
       <Link
-        href="/settings"
+        href="/dashboard/settings"
         className="shrink-0 rounded-xl bg-amber-500 px-5 py-2.5 text-xs font-bold text-black transition-all hover:bg-amber-400 hover:scale-[1.02] active:scale-[0.98] shadow-md"
       >
         Complete in Settings &rarr;

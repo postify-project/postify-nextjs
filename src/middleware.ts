@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 const BACKEND = process.env.NEXT_PUBLIC_API_URL;
+
 // Helper function to validate token against your backend /profile/me endpoint
 async function verifyTokenWithBackend(token: string): Promise<boolean> {
   try {
@@ -14,13 +15,12 @@ async function verifyTokenWithBackend(token: string): Promise<boolean> {
       // Ensure fetch request is not cached by Next.js Edge/Server runtime
       cache: "no-store",
     });
-
     if (!res.ok) return false;
 
     const data = await res.json();
     return Boolean(data?.success);
   } catch (error) {
-    console.error("Token verification failed in middleware:", error);
+    console.error("Token verification failed in proxy handler:", error);
     return false;
   }
 }
@@ -43,8 +43,20 @@ export async function middleware(request: NextRequest) {
       const isValid = await verifyTokenWithBackend(urlToken);
 
       if (isValid) {
-        // Token is valid! Allow entry to /dashboard so client handler can save cookie
-        return NextResponse.next();
+        // Token is valid! Prepare response and set cookie directly in browser headers
+        const response = NextResponse.next();
+
+        response.cookies.set({
+          name: "token",
+          value: urlToken,
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "lax",
+          path: "/",
+          maxAge: 60 * 60 * 24 * 7, // 7 days (adjust as needed)
+        });
+
+        return response;
       }
     }
 

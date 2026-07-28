@@ -27,7 +27,7 @@ export default function Sidebar() {
       )
     },
     {
-      path: "/AiVideoGenerator",
+      path: "/dashboard/AiVideoGenerator",
       label: "AI Video Gen",
       icon: (
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -37,7 +37,7 @@ export default function Sidebar() {
       )
     },
     {
-      path: "/BGRemover",
+      path: "/dashboard/BGRemover",
       label: "Video BG Remover",
       icon: (
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -49,7 +49,7 @@ export default function Sidebar() {
       )
     },
     {
-      path: "/connections",
+      path: "/dashboard/connections",
       label: "Connections",
       icon: (
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -61,7 +61,7 @@ export default function Sidebar() {
       )
     },
     {
-      path: "/credentials",
+      path: "/dashboard/credentials",
       label: "API Credentials",
       icon: (
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -71,7 +71,7 @@ export default function Sidebar() {
       )
     },
     {
-      path: "/history",
+      path: "/dashboard/history",
       label: "Task History",
       icon: (
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -83,7 +83,7 @@ export default function Sidebar() {
       )
     },
     {
-      path: "/postGenerator",
+      path: "/dashboard/postGenerator",
       label: "AI Social Post",
       icon: (
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -92,7 +92,7 @@ export default function Sidebar() {
       )
     },
     {
-      path: "/thumbnail",
+      path: "/dashboard/thumbnail",
       label: "AI Thumbnail",
       icon: (
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -103,7 +103,7 @@ export default function Sidebar() {
       )
     },
     {
-      path: "/translator",
+      path: "/dashboard/translator",
       label: "Video Translator",
       icon: (
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -114,7 +114,7 @@ export default function Sidebar() {
       )
     },
     {
-      path: "/video-upload",
+      path: "/dashboard/video-upload",
       label: "Video Upload",
       icon: (
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -125,7 +125,7 @@ export default function Sidebar() {
       )
     },
     {
-      path: "/settings",
+      path: "/dashboard/settings",
       label: "Settings",
       icon: (
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

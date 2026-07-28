@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Outfit, Inter } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/app/components/navbar/Navbar";
-import Sidebar from "@/app/components/sidebar/Sidebar";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -40,20 +38,11 @@ export default function RootLayout({
           defer
         ></script>
       </head>
-      <body className="h-full bg-[#0e1017] font-inter text-[#f3f4f6]">
-        {/* Top Fixed Navigation */}
-        <Navbar />
-
-        {/* Layout Shell */}
-        <div className="flex h-full pt-[52px]">
-          {/* Left Sidebar View */}
-          <Sidebar />
-
-          {/* Right Fluid Scroll Panel */}
-          <main className="h-full w-full overflow-y-auto pl-[60px] md:pl-[200px]">
-            {children}
-          </main>
-        </div>
+      <body
+        suppressHydrationWarning={true}
+        className="h-full bg-[#0e1017] font-inter text-[#f3f4f6]"
+      >
+        {children}
       </body>
     </html>
   );

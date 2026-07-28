@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import GoogleAuthHandler from "@/app/components/auth/GoogleAuthHandler";
 import LogoutButtons from "@/app/components/auth/LogoutButtons";
-import OAuthHandler from "../components/auth/OAuthHandler";
+import OAuthHandler from "@/app/components/auth/OAuthHandler";
 
 export default function DashboardPage() {
   return (
