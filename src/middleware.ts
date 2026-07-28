@@ -29,7 +29,7 @@ export async function middleware(request: NextRequest) {
   const tokenCookie = request.cookies.get("token")?.value;
   const { pathname, searchParams } = request.nextUrl;
 
-  const urlToken = searchParams.get("token")
+  const urlToken = searchParams.get("token");
 
   // 1. Protected routes handling
   if (pathname.startsWith("/dashboard")) {
