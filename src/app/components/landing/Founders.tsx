@@ -20,7 +20,7 @@ const teamMembers: TeamMember[] = [
     id: "1",
     name: "Sharjeel Khan",
     role: "Product Designer",
-    image: "/Founder-man.png",
+    image: "/founder-man.png",
     baseSize: "lg",
     desktopPos: { top: "8%", left: "22%" },
     floatPath: { x: [0, 15, -10, 0], y: [0, -18, 12, 0] },
@@ -29,7 +29,7 @@ const teamMembers: TeamMember[] = [
     id: "2",
     name: "Aun Baloch",
     role: "AI Engineer",
-    image: "/Founder-man.png",
+    image: "/founder-man.png",
     baseSize: "sm",
     desktopPos: { top: "25%", left: "10%" },
     floatPath: { x: [0, -12, 10, 0], y: [0, 15, -15, 0] },
@@ -38,7 +38,7 @@ const teamMembers: TeamMember[] = [
     id: "3",
     name: "Farhan Khan",
     role: "Full-Stack Lead",
-    image: "/Founder-man.png",
+    image: "/founder-man.png",
     baseSize: "md",
     desktopPos: { top: "15%", left: "50%" },
     floatPath: { x: [0, 18, -12, 0], y: [0, -12, 18, 0] },
@@ -47,7 +47,7 @@ const teamMembers: TeamMember[] = [
     id: "4",
     name: "Saad Khatri",
     role: "Frontend Architect",
-    image: "/Founder-man.png",
+    image: "/founder-man.png",
     baseSize: "lg",
     desktopPos: { top: "6%", right: "12%" },
     floatPath: { x: [0, -15, 12, 0], y: [0, 16, -10, 0] },
@@ -56,7 +56,7 @@ const teamMembers: TeamMember[] = [
     id: "5",
     name: "Sharjeel Khan",
     role: "Product Designer",
-    image: "/Founder-man.png",
+    image: "/founder-man.png",
     baseSize: "lg",
     desktopPos: { bottom: "10%", left: "8%" },
     floatPath: { x: [0, 12, -18, 0], y: [0, -15, 10, 0] },
@@ -65,7 +65,7 @@ const teamMembers: TeamMember[] = [
     id: "6",
     name: "Daniyal Raza",
     role: "UX Researcher",
-    image: "/Founder-man.png",
+    image: "/founder-man.png",
     baseSize: "md",
     desktopPos: { bottom: "12%", left: "20%" },
     floatPath: { x: [0, -10, 15, 0], y: [0, 14, -12, 0] },
@@ -74,7 +74,7 @@ const teamMembers: TeamMember[] = [
     id: "7",
     name: "Usman Ali",
     role: "Growth Marketer",
-    image: "/Founder-man.png",
+    image: "/founder-man.png",
     baseSize: "sm",
     desktopPos: { bottom: "30%", right: "28%" },
     floatPath: { x: [0, 14, -10, 0], y: [0, -16, 14, 0] },
@@ -83,7 +83,7 @@ const teamMembers: TeamMember[] = [
     id: "8",
     name: "Abad Khan",
     role: "Product Designer",
-    image: "/Founder-man.png",
+    image: "/founder-man.png",
     baseSize: "lg",
     desktopPos: { bottom: "8%", right: "12%" },
     floatPath: { x: [0, -16, 14, 0], y: [0, 12, -18, 0] },
@@ -192,7 +192,7 @@ export const MeetOurExperts: React.FC = () => {
               >
                 {/* Background Image Asset */}
                 <Image
-                  src="/founder-bg.png" // REPLACE WITH YOUR BACKGROUND IMAGE FILE PATH
+                  src="/founder-bg.png"
                   alt="Card Background"
                   fill
                   priority
