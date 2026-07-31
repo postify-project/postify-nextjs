@@ -16,11 +16,14 @@ export default function CredentialsPage() {
   };
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-8 text-slate-100 antialiased selection:bg-indigo-500/20 relative">
-      {/* Toast Notification - Refined and de-saturated */}
+    <div className="relative mx-auto max-w-4xl px-4 py-8 font-inter text-slate-800 antialiased selection:bg-rose-500/20">
+      {/* Light Ambient Glow */}
+      <div className="pointer-events-none absolute -top-10 left-1/2 -z-10 h-[250px] w-[500px] -translate-x-1/2 rounded-full bg-rose-500/5 blur-[120px]" />
+
+      {/* Toast Notification - Light theme styled */}
       {showToast && (
-        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3 rounded-xl border border-slate-700 bg-slate-800 px-5 py-3 text-sm font-medium text-slate-100 shadow-2xl animate-[slide-up_0.3s_cubic-bezier(0.16,1,0.3,1)_forwards]">
-          <div className="flex shrink-0 items-center justify-center text-emerald-400">
+        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-medium text-slate-900 shadow-xl animate-[slide-up_0.3s_cubic-bezier(0.16,1,0.3,1)_forwards]">
+          <div className="flex shrink-0 items-center justify-center text-emerald-600">
             <svg
               width="20"
               height="20"
@@ -37,22 +40,22 @@ export default function CredentialsPage() {
         </div>
       )}
 
-      {/* Page Header - Clean and standard */}
-      <header className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center border-b border-slate-800 pb-6">
+      {/* Page Header */}
+      <header className="mb-8 flex flex-col justify-between gap-4 border-b border-slate-200/80 pb-6 sm:flex-row sm:items-center">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-white font-outfit">
-            API Credentials <span className="text-indigo-400">Setup</span>
+          <h1 className="font-outfit text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+            API Credentials <span className="text-rose-600">Setup</span>
           </h1>
-          <p className="mt-1 text-xs text-slate-400">
+          <p className="mt-1 text-xs text-slate-500">
             Securely manage your integrated service keys for YouTube, Facebook,
             TikTok, and Gemini.
           </p>
         </div>
         <button
-          className={`flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-indigo-600 px-5 py-2.5 text-xs font-semibold text-white shadow-sm transition-all duration-150 select-none ${
+          className={`flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-rose-600 px-5 py-2.5 text-xs font-semibold text-white shadow-sm shadow-rose-600/10 transition-all duration-150 select-none ${
             isSaving
-              ? "opacity-60 cursor-not-allowed"
-              : "hover:bg-indigo-500 active:scale-[0.98]"
+              ? "cursor-not-allowed opacity-60"
+              : "hover:bg-rose-500 hover:shadow-rose-500/20 active:scale-[0.98]"
           }`}
           onClick={handleSave}
           disabled={isSaving}
@@ -86,18 +89,17 @@ export default function CredentialsPage() {
 
       {/* Grid Canvas */}
       <section className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        {/* Card Component Helper to enforce consistency */}
         {cardData.map((card) => (
           <div
             key={card.title}
-            className="group rounded-2xl border border-slate-800/80 bg-[#111623] p-6 shadow-sm transition-all duration-200 hover:border-slate-700"
+            className="group rounded-2xl border border-slate-200/80 bg-white p-6 shadow-xl transition-all duration-300 hover:border-slate-300 hover:shadow-2xl"
           >
-            <header className="mb-5 flex items-center gap-3 border-b border-slate-800 pb-4">
-              {/* Icon Container - Monochromatic Slate */}
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-800/80 text-slate-300 ring-1 ring-slate-700/50 group-hover:text-indigo-400 group-hover:ring-indigo-500/30 transition-colors">
+            <header className="mb-5 flex items-center gap-3 border-b border-slate-100 pb-4">
+              {/* Icon Container - Clean Light Styling */}
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 text-slate-600 transition-colors group-hover:border-rose-200 group-hover:bg-rose-50 group-hover:text-rose-600">
                 {card.icon}
               </div>
-              <h3 className="text-sm font-semibold text-white font-outfit">
+              <h3 className="font-outfit text-sm font-bold text-slate-900">
                 {card.title}
               </h3>
             </header>
@@ -105,19 +107,19 @@ export default function CredentialsPage() {
             <div className="space-y-4">
               {card.inputs.map((input, index) => (
                 <div key={index} className="flex flex-col gap-1.5">
-                  <label className="text-[11px] font-medium text-slate-400">
+                  <label className="text-[11px] font-semibold tracking-wider text-slate-500 uppercase">
                     {input.label}
                   </label>
                   <input
                     type={input.type}
                     placeholder={input.placeholder}
                     defaultValue={input.defaultValue}
-                    className="w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-2.5 text-xs text-slate-200 outline-none placeholder:text-slate-600 focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 transition-all"
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-xs text-slate-800 outline-none transition-all placeholder:text-slate-400 focus:border-rose-500 focus:bg-white focus:ring-1 focus:ring-rose-500/30"
                   />
                 </div>
               ))}
               {card.note && (
-                <p className="mt-2 text-[10px] leading-relaxed text-slate-500 bg-slate-900/50 p-3 rounded-lg border border-slate-800/50">
+                <p className="mt-2 rounded-xl border border-slate-200 bg-slate-50/60 p-3 text-[10px] leading-relaxed text-slate-500">
                   {card.note}
                 </p>
               )}
@@ -129,7 +131,7 @@ export default function CredentialsPage() {
   );
 }
 
-// Data structure for the cards to keep JSX clean
+// Data structure for the cards
 const cardData = [
   {
     title: "YouTube Data API v3",
@@ -200,8 +202,8 @@ const cardData = [
   {
     title: "Google Gemini AI",
     icon: (
-      <span className="text-lg font-bold font-outfit text-slate-400 group-hover:text-indigo-400 transition-colors">
-        $
+      <span className="font-outfit text-base font-bold text-slate-500 transition-colors group-hover:text-rose-600">
+        ✦
       </span>
     ),
     inputs: [

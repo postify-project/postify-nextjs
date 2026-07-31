@@ -18,18 +18,18 @@ interface TeamMember {
 const teamMembers: TeamMember[] = [
   {
     id: "1",
-    name: "Sharjeel Khan",
-    role: "Product Designer",
-    image: "/founder-man.png",
+    name: "Farhan Khan",
+    role: "Full-Stack Dev & Team Lead",
+    image: "/farhan-founder.png",
     baseSize: "lg",
     desktopPos: { top: "8%", left: "22%" },
     floatPath: { x: [0, 15, -10, 0], y: [0, -18, 12, 0] },
   },
   {
     id: "2",
-    name: "Aun Baloch",
+    name: "Syed Sajid Hussain",
     role: "AI Engineer",
-    image: "/founder-man.png",
+    image: "/syed-sajid.jpeg",
     baseSize: "sm",
     desktopPos: { top: "25%", left: "10%" },
     floatPath: { x: [0, -12, 10, 0], y: [0, 15, -15, 0] },
@@ -190,15 +190,8 @@ export const MeetOurExperts: React.FC = () => {
                 }}
                 className="relative overflow-hidden rounded-[1.5rem] shadow-xl border border-rose-950/10 flex flex-col justify-end"
               >
-                {/* Background Image Asset */}
-                <Image
-                  src="/founder-bg.png"
-                  alt="Card Background"
-                  fill
-                  priority
-                  quality={100}
-                  className="object-cover"
-                />
+                {/* Replaced Image Asset with CSS Gradient Background */}
+                <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-[#ffc5be] via-[#fca8a1] to-[#f88f87] opacity-100" />
 
                 {/* Person Photo */}
                 <Image
@@ -234,13 +227,13 @@ export const MeetOurExperts: React.FC = () => {
 
       {/* Mobile Screen Fallback */}
       <div className="md:hidden w-full mt-10 grid grid-cols-2 gap-4 max-w-sm mx-auto">
-        {teamMembers.slice(0, 4).map((member) => (
+        {teamMembers.map((member) => (
           <div
             key={member.id}
             className="relative aspect-square rounded-[1.25rem] overflow-hidden border border-rose-950/10 shadow-md p-2 flex flex-col justify-end"
           >
             <Image
-              src="/card-bg.jpg"
+              src="/founder-bg.png"
               alt="Card Background"
               fill
               quality={100}

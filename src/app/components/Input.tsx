@@ -18,7 +18,7 @@ export default function Input({ label, isPassword, ...props }: InputProps) {
         <input
           type={isPassword ? (show ? "text" : "password") : props.type}
           {...props}
-          className="w-full bg-[#0F1524] text-white border border-[#1E293B] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-sky-500 transition-all duration-300 group-hover:border-gray-700"
+          className="w-full bg-white text-gray-900 border border-[#1E293B] rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-rose-600 transition-all duration-300 group-hover:border-rose-500"
         />
         {isPassword && (
           <button

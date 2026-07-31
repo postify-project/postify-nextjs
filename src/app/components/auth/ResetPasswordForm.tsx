@@ -1,6 +1,8 @@
 "use client";
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import api from "@/lib/axios";
 import Input from "@/app/components/Input";
 
@@ -40,14 +42,11 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
-
-      console.log(response);
 
       setMsg(response.data?.message || "Password updated successfully!");
 
-      // Redirect to login after 2 seconds
       setTimeout(() => {
         router.push("/login");
       }, 2000);
@@ -55,7 +54,7 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
       setErr(
         error.response?.data?.message ||
           error.response?.data?.error ||
-          "Failed to reset password. Link may be expired."
+          "Failed to reset password. Link may be expired.",
       );
     } finally {
       setLoading(false);
@@ -63,52 +62,72 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
   };
 
   return (
-    <div className="w-full max-w-md bg-[#111827]/40 border border-[#1E293B] rounded-2xl p-8 backdrop-blur-xl shadow-2xl transition-all duration-500 hover:shadow-sky-500/5 hover:-translate-y-1">
-      <h2 className="text-2xl font-semibold text-white tracking-tight mb-2">
-        Set New Password
-      </h2>
-      <p className="text-sm text-gray-400 mb-6">
-        Create a strong, secure password containing numbers and uppercase
-        letters.
-      </p>
+    <div className="w-full max-w-md rounded-2xl border border-slate-200/80 bg-white p-8 font-inter text-slate-800 shadow-xl transition-all duration-300">
+      <div className="mb-6 space-y-1">
+        <h2 className="font-outfit text-2xl font-bold tracking-tight text-slate-900">
+          Set New Password
+        </h2>
+        <p className="text-xs leading-relaxed text-slate-500">
+          Create a strong, secure password containing numbers and uppercase
+          letters.
+        </p>
+      </div>
 
+      {/* Error Banner */}
       {err && (
-        <div className="bg-red-500/10 border border-red-500/20 text-red-400 text-xs p-3 rounded-lg mb-4">
+        <div className="mb-4 rounded-xl border border-rose-200 bg-rose-50/80 p-3 text-xs font-medium text-rose-700">
           {err}
         </div>
       )}
+
+      {/* Success Banner */}
       {msg && (
-        <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs p-3 rounded-lg mb-4">
+        <div className="mb-4 rounded-xl border border-emerald-200 bg-emerald-50/80 p-3 text-xs font-medium text-emerald-700">
           {msg}
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <Input
-          label="New Password"
-          isPassword
-          required
-          value={form.newPassword}
-          onChange={(e) => setForm({ ...form, newPassword: e.target.value })}
-        />
-        <Input
-          label="Confirm New Password"
-          isPassword
-          required
-          value={form.confirmPassword}
-          onChange={(e) =>
-            setForm({ ...form, confirmPassword: e.target.value })
-          }
-        />
+        <div>
+          <Input
+            label="New Password"
+            isPassword
+            required
+            value={form.newPassword}
+            onChange={(e) => setForm({ ...form, newPassword: e.target.value })}
+          />
+        </div>
+
+        <div>
+          <Input
+            label="Confirm New Password"
+            isPassword
+            required
+            value={form.confirmPassword}
+            onChange={(e) =>
+              setForm({ ...form, confirmPassword: e.target.value })
+            }
+          />
+        </div>
 
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-white hover:bg-gray-100 text-black font-medium py-3 rounded-lg text-sm transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 mt-2"
+          className="mt-2 w-full cursor-pointer rounded-xl bg-rose-600 py-3 text-xs font-semibold text-white shadow-sm transition-all duration-200 hover:bg-rose-500 hover:shadow-rose-500/10 active:scale-[0.98] disabled:opacity-50"
         >
           {loading ? "Updating Password..." : "Reset Password"}
         </button>
       </form>
+
+      <p className="mt-6 text-center text-xs text-slate-500">
+        Back to safety?{" "}
+        <Link
+          href="/login"
+          className="font-medium text-rose-600 hover:text-rose-700 hover:underline"
+        >
+          Return to Login
+        </Link>
+      </p>
     </div>
   );
 }

@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import api from "@/lib/axios";
@@ -20,7 +21,6 @@ export default function OtpForm({ email }: OtpFormProps) {
     e.preventDefault();
     setErr("");
 
-    // Trim and format inputs
     const trimmedOtp = otp.trim().toUpperCase();
     const trimmedEmail = email ? email.trim() : "";
 
@@ -36,18 +36,15 @@ export default function OtpForm({ email }: OtpFormProps) {
         email: trimmedEmail,
       };
 
-      await api.post(
-        `${BACKEND}/auth/otp-verify`,
-        payload
-      );
+      await api.post(`${BACKEND}/auth/otp-verify`, payload);
 
       // Successfully verified -> redirect to login page
       router.push("/login");
     } catch (error: any) {
       setErr(
         error.response?.data?.message ||
-        error.response?.data?.error ||
-        "Verification failed."
+          error.response?.data?.error ||
+          "Verification failed.",
       );
     } finally {
       setLoading(false);
@@ -55,38 +52,61 @@ export default function OtpForm({ email }: OtpFormProps) {
   };
 
   return (
-    <div className="w-full max-w-md bg-[#111827]/40 border border-[#1E293B] rounded-2xl p-8 backdrop-blur-xl shadow-2xl">
-      <h2 className="text-2xl font-semibold text-white tracking-tight mb-2">
-        Verify Account
-      </h2>
-      <p className="text-sm text-gray-400 mb-6">
-        Enter the verification code sent to{" "}
-        <span className="text-white font-medium">{email}</span>.
-      </p>
+    <div className="w-full max-w-md overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-8 font-inter text-slate-800 shadow-xl transition-all duration-300">
+      {/* Brand Header */}
+      <div className="mb-6 flex flex-col items-center text-center">
+        <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-rose-600 font-outfit text-lg font-bold text-white shadow-sm shadow-rose-500/20">
+          P
+        </div>
+        <h2 className="font-outfit text-2xl font-bold tracking-tight text-slate-900">
+          Verify Your Email
+        </h2>
+        <p className="mt-1 text-xs text-slate-500 leading-normal">
+          We sent a 6-digit code to{" "}
+          <span className="font-semibold text-slate-800">
+            {email || "your email"}
+          </span>
+        </p>
+      </div>
 
       {err && (
-        <div className="bg-red-500/10 border border-red-500/20 text-red-400 text-xs p-3 rounded-lg mb-4">
+        <div className="mb-5 rounded-lg border border-rose-200 bg-rose-50/80 p-3 text-xs font-medium text-rose-700">
           {err}
         </div>
       )}
 
-      <form onSubmit={handleVerify} className="flex flex-col gap-4">
+      <form onSubmit={handleVerify} className="flex flex-col gap-5">
         <Input
-          label="Verification OTP Code"
+          label="Verification Code (OTP)"
           type="text"
           value={otp}
           maxLength={6}
           required
           onChange={(e) => setOtp(e.target.value)}
         />
+
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-white hover:bg-gray-100 text-black font-medium py-3 rounded-lg text-sm transition-all duration-300 disabled:opacity-50 mt-2"
+          className="w-full cursor-pointer rounded-xl bg-rose-600 py-3 text-xs font-semibold text-white shadow-sm shadow-rose-600/10 transition-all duration-200 hover:bg-rose-500 hover:shadow-rose-500/20 active:scale-[0.98] disabled:opacity-50"
         >
           {loading ? "Verifying..." : "Verify & Proceed to Login"}
         </button>
       </form>
+
+      {/* Resend Action & Back Link */}
+      <div className="mt-6 flex flex-col items-center gap-2 border-t border-slate-100 pt-5 text-xs text-slate-500">
+        <p>
+          Didn't receive code?{" "}
+          <button
+            type="button"
+            onClick={() => router.refresh()}
+            className="font-semibold text-rose-600 transition-colors hover:text-rose-700 hover:underline"
+          >
+            Resend Code
+          </button>
+        </p>
+      </div>
     </div>
   );
 }

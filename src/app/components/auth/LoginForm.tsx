@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -33,16 +34,9 @@ export default function LoginForm() {
         password: form.password,
       };
 
-      const response = await api.post(
-        `${BACKEND}/auth/login`,
-        payload
-      );
-      console.log("response --> ", response);
-
-      // Extract token and user data based on backend response shape
+      const response = await api.post(`${BACKEND}/auth/login`, payload);
       const { token, data: user } = response.data;
 
-      // Store JWT token securely in Cookies for 7 days
       if (token) {
         Cookies.set("token", token, {
           expires: 7,
@@ -51,17 +45,14 @@ export default function LoginForm() {
         });
       }
 
-      // Store user details in localStorage
       if (user) {
         localStorage.setItem("user", JSON.stringify(user));
       }
 
-      // Navigate to dashboard
       router.push("/dashboard");
     } catch (error: any) {
       const responseData = error.response?.data;
 
-      // If user exists but is not verified, route directly to OTP verification
       if (responseData?.unverified) {
         router.push(`/verify-otp?email=${encodeURIComponent(trimmedEmail)}`);
         return;
@@ -69,8 +60,8 @@ export default function LoginForm() {
 
       setErr(
         responseData?.message ||
-        responseData?.error ||
-        "Invalid credentials. Please try again."
+          responseData?.error ||
+          "Invalid credentials. Please try again."
       );
     } finally {
       setLoading(false);
@@ -78,75 +69,128 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="w-full max-w-md bg-[#111827]/40 border border-[#1E293B] rounded-2xl p-8 backdrop-blur-xl shadow-2xl transition-all duration-500 hover:shadow-sky-500/5 hover:-translate-y-1">
-      <h2 className="text-2xl font-semibold text-white tracking-tight mb-2">
-        Welcome Back
-      </h2>
-      <p className="text-sm text-gray-400 mb-6">Sign in to your account.</p>
-
-      {err && (
-        <div className="bg-red-500/10 border border-red-500/20 text-red-400 text-xs p-3 rounded-lg mb-4">
-          {err}
-        </div>
-      )}
-
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <Input
-          label="Email Address"
-          type="email"
-          value={form.email}
-          required
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
-        />
-        <div>
-          <div className="flex justify-between items-center mb-1">
-            <label className="text-xs text-gray-400 font-medium tracking-wide uppercase">
-              Password
-            </label>
-            <Link
-              href="/forgot-password"
-              className="text-xs text-sky-400 hover:underline"
-            >
-              Forgot password?
-            </Link>
+    <div className="flex w-full max-w-4xl overflow-hidden rounded-2xl border border-slate-200/80 bg-white font-inter text-slate-800 shadow-xl transition-all duration-300">
+      {/* Left Brand Panel */}
+      <div className="hidden md:flex w-1/2 flex-col justify-between bg-slate-900 p-10 text-white border-r border-slate-800">
+        {/* Brand Header */}
+        <div className="flex items-center gap-2.5">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-rose-600 font-outfit text-lg font-bold text-white shadow-sm">
+            P
           </div>
-          <Input
-            label=""
-            isPassword
-            value={form.password}
-            required
-            onChange={(e) => setForm({ ...form, password: e.target.value })}
-          />
+          <span className="font-outfit text-2xl font-bold tracking-tight text-white">
+            Postify
+          </span>
         </div>
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-white hover:bg-gray-100 text-black font-medium py-3 rounded-lg text-sm transition-all duration-300 disabled:opacity-50 mt-2"
-        >
-          {loading ? "Signing In..." : "Sign In"}
-        </button>
-      </form>
+        {/* Main Bold Headline & Value Prop */}
+        <div className="my-auto space-y-6 py-8">
+          <h1 className="font-outfit text-3xl sm:text-4xl font-extrabold tracking-tight text-white leading-[1.15]">
+            Supercharge your content workflow.
+          </h1>
+          <p className="text-sm leading-relaxed text-slate-400">
+            Publish everywhere with confidence. Seamlessly plan, schedule, and analyze all your social media posts in one clean workspace.
+          </p>
 
-      <div className="relative flex py-5 items-center">
-        <div className="flex-grow border-t border-[#1E293B]"></div>
-        <span className="flex-shrink mx-4 text-gray-500 text-xs uppercase">
-          or
-        </span>
-        <div className="flex-grow border-t border-[#1E293B]"></div>
+          {/* Clean Metric Stats */}
+          <div className="pt-4 grid grid-cols-2 gap-4 border-t border-slate-800">
+            <div>
+              <p className="font-outfit text-2xl font-bold text-white">10x</p>
+              <p className="text-[11px] text-slate-400 font-medium">Faster Scheduling</p>
+            </div>
+            <div>
+              <p className="font-outfit text-2xl font-bold text-white">99.9%</p>
+              <p className="text-[11px] text-slate-400 font-medium">Uptime Guarantee</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Footer info */}
+        <div className="text-[11px] text-slate-500 font-medium">
+          © 2026 Postify Inc. All rights reserved.
+        </div>
       </div>
 
-      <GoogleButton onError={(msg) => setErr(msg)} />
-      <div className="mt-4">
-        <FacebookAuthButton onError={(msg) => setErr(msg)} />
-      </div>
+      {/* Right Login Form */}
+      <div className="w-full md:w-1/2 p-8 sm:p-10 flex flex-col justify-center">
+        <div className="mb-6 space-y-1">
+          <h2 className="font-outfit text-2xl font-bold tracking-tight text-slate-900">
+            Welcome Back
+          </h2>
+          <p className="text-xs text-slate-500">
+            Sign in to access your Postify publishing dashboard.
+          </p>
+        </div>
 
-      <p className="text-center text-xs text-gray-400 mt-6">
-        Don't have an account?{" "}
-        <Link href="/signup" className="text-sky-400 hover:underline">
-          Sign up
-        </Link>
-      </p>
+        {err && (
+          <div className="mb-4 rounded-xl border border-rose-200 bg-rose-50/80 p-3 text-xs font-medium text-rose-700">
+            {err}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <div>
+            <Input
+              label="Email Address"
+              type="email"
+              value={form.email}
+              required
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
+            />
+          </div>
+
+          <div>
+            <div className="mb-1 flex items-center justify-between">
+              <label className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                Password
+              </label>
+              <Link
+                href="/forgot-password"
+                className="text-xs font-medium text-rose-600 hover:text-rose-700 hover:underline"
+              >
+                Forgot password?
+              </Link>
+            </div>
+            <Input
+              label=""
+              isPassword
+              value={form.password}
+              required
+              onChange={(e) => setForm({ ...form, password: e.target.value })}
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="mt-2 w-full cursor-pointer rounded-xl bg-rose-600 py-3 text-xs font-semibold text-white shadow-sm transition-all duration-200 hover:bg-rose-500 hover:shadow-rose-500/10 active:scale-[0.98] disabled:opacity-50"
+          >
+            {loading ? "Signing In..." : "Sign In"}
+          </button>
+        </form>
+
+        <div className="relative my-6 flex items-center">
+          <div className="flex-grow border-t border-slate-100" />
+          <span className="shrink-0 px-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+            or continue with
+          </span>
+          <div className="flex-grow border-t border-slate-100" />
+        </div>
+
+        <div className="space-y-3">
+          <GoogleButton onError={(msg) => setErr(msg)} />
+          <FacebookAuthButton onError={(msg) => setErr(msg)} />
+        </div>
+
+        <p className="mt-6 text-center text-xs text-slate-500">
+          Don't have an account?{" "}
+          <Link
+            href="/signup"
+            className="font-medium text-rose-600 hover:text-rose-700 hover:underline"
+          >
+            Sign up
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }

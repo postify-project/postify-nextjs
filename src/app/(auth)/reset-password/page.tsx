@@ -6,8 +6,8 @@ import ResetPasswordForm from "@/app/components/auth/ResetPasswordForm";
 
 function ResetFallback() {
   return (
-    <div className="w-full max-w-md bg-[#111827]/40 border border-[#1E293B] rounded-2xl p-8 backdrop-blur-xl shadow-2xl flex items-center justify-center">
-      <p className="text-sm text-gray-400 animate-pulse">
+    <div className="flex w-full max-w-md items-center justify-center rounded-2xl border border-slate-200/80 bg-white p-8 font-inter text-slate-800 shadow-xl">
+      <p className="animate-pulse text-xs text-slate-500">
         Verifying token context...
       </p>
     </div>
@@ -16,7 +16,6 @@ function ResetFallback() {
 
 function ResetContainer() {
   const searchParams = useSearchParams();
-  // Extracts token whether query param is ?q= or ?token=
   const token = searchParams.get("q") || searchParams.get("token") || "";
 
   return <ResetPasswordForm token={token} />;
@@ -24,7 +23,7 @@ function ResetContainer() {
 
 export default function ResetPasswordPage() {
   return (
-    <main className="min-h-screen bg-[#0B0F19] flex items-center justify-center p-4">
+    <main className="flex min-h-screen items-center justify-center bg-slate-50 p-4 font-inter text-slate-800">
       <Suspense fallback={<ResetFallback />}>
         <ResetContainer />
       </Suspense>

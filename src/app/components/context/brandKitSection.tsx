@@ -735,16 +735,16 @@ export default function BrandKitSection({
               <button
                 type="button"
                 onClick={() => setIsModalOpen(false)}
-                className="cursor-pointer rounded-xl border border-slate-200 px-4 py-2.5 text-xs font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900"
+                className="rounded-xl border border-slate-200 px-4 py-2.5 text-xs font-semibold text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900"
               >
                 Cancel
               </button>
               <button
                 type="button"
                 onClick={handleSaveDetails}
-                className="cursor-pointer rounded-xl bg-slate-900 px-6 py-2.5 text-xs font-semibold text-white shadow-sm transition-all duration-200 hover:bg-rose-600 active:scale-[0.98]"
+                className="rounded-xl bg-slate-900 px-5 py-2.5 text-xs font-semibold text-white shadow-sm transition-all hover:bg-rose-600 active:scale-[0.98]"
               >
-                Save Settings
+                Save Brand Parameters
               </button>
             </div>
           </div>
