@@ -36,7 +36,7 @@ const teamMembers: TeamMember[] = [
   },
   {
     id: "3",
-    name: "Ubaid",
+    name: "Ubaid Raza",
     role: "Full Stack Developer",
     image: "/ubaid.png",
     baseSize: "md",
@@ -54,7 +54,7 @@ const teamMembers: TeamMember[] = [
   },
   {
     id: "5",
-    name: "Muneer",
+    name: "Muneer Hussain",
     role: "AI Engineer",
     image: "/muneer.png",
     baseSize: "lg",
@@ -72,7 +72,7 @@ const teamMembers: TeamMember[] = [
   },
   {
     id: "7",
-    name: "Hamza",
+    name: "Hamza Ilyas",
     role: "FullStack Developer",
     image: "/hamza.png",
     baseSize: "sm",
@@ -81,7 +81,7 @@ const teamMembers: TeamMember[] = [
   },
   {
     id: "8",
-    name: "Ayan ",
+    name: "Aayan Ahmed Tejani",
     role: "AI Engineer",
     image: "/ayan.png",
     baseSize: "lg",
