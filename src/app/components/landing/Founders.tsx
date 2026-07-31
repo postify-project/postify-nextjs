@@ -20,96 +20,105 @@ const teamMembers: TeamMember[] = [
     id: "1",
     name: "Farhan Khan",
     role: "Full-Stack Dev & Team Lead",
-    image: "/farhan-founder.png",
+    image: "/farhan.png",
     baseSize: "lg",
-    desktopPos: { top: "8%", left: "22%" },
-    floatPath: { x: [0, 15, -10, 0], y: [0, -18, 12, 0] },
+    desktopPos: { top: "18%", left: "18%" },
+    floatPath: { x: [0, 10, -8, 0], y: [0, -10, 8, 0] },
   },
   {
     id: "2",
     name: "Syed Sajid Hussain",
     role: "AI Engineer",
-    image: "/syed-sajid.jpeg",
+    image: "/sajid.png",
     baseSize: "sm",
-    desktopPos: { top: "25%", left: "10%" },
-    floatPath: { x: [0, -12, 10, 0], y: [0, 15, -15, 0] },
+    desktopPos: { top: "35%", left: "6%" },
+    floatPath: { x: [0, -8, 8, 0], y: [0, 8, -8, 0] },
   },
   {
     id: "3",
-    name: "Farhan Khan",
-    role: "Full-Stack Lead",
-    image: "/founder-man.png",
+    name: "Ubaid",
+    role: "Full Stack Developer",
+    image: "/ubaid.png",
     baseSize: "md",
-    desktopPos: { top: "15%", left: "50%" },
-    floatPath: { x: [0, 18, -12, 0], y: [0, -12, 18, 0] },
+    desktopPos: { top: "18%", left: "46%" },
+    floatPath: { x: [0, 10, -8, 0], y: [0, -8, 10, 0] },
   },
   {
     id: "4",
-    name: "Saad Khatri",
-    role: "Frontend Architect",
-    image: "/founder-man.png",
+    name: "Rana Adil",
+    role: "FullStack Developer",
+    image: "/adil.png",
     baseSize: "lg",
-    desktopPos: { top: "6%", right: "12%" },
-    floatPath: { x: [0, -15, 12, 0], y: [0, 16, -10, 0] },
+    desktopPos: { top: "18%", right: "10%" },
+    floatPath: { x: [0, -10, 8, 0], y: [0, 10, -8, 0] },
   },
   {
     id: "5",
-    name: "Sharjeel Khan",
-    role: "Product Designer",
-    image: "/founder-man.png",
+    name: "Muneer",
+    role: "AI Engineer",
+    image: "/muneer.png",
     baseSize: "lg",
-    desktopPos: { bottom: "10%", left: "8%" },
-    floatPath: { x: [0, 12, -18, 0], y: [0, -15, 10, 0] },
+    desktopPos: { bottom: "6%", left: "6%" },
+    floatPath: { x: [0, 8, -10, 0], y: [0, -8, 6, 0] },
   },
   {
     id: "6",
-    name: "Daniyal Raza",
-    role: "UX Researcher",
-    image: "/founder-man.png",
+    name: "Luqman Khan",
+    role: "FullStack Developer",
+    image: "/luqman.png",
     baseSize: "md",
-    desktopPos: { bottom: "12%", left: "20%" },
-    floatPath: { x: [0, -10, 15, 0], y: [0, 14, -12, 0] },
+    desktopPos: { bottom: "8%", left: "22%" },
+    floatPath: { x: [0, -6, 8, 0], y: [0, 8, -6, 0] },
   },
   {
     id: "7",
-    name: "Usman Ali",
-    role: "Growth Marketer",
-    image: "/founder-man.png",
+    name: "Hamza",
+    role: "FullStack Developer",
+    image: "/hamza.png",
     baseSize: "sm",
-    desktopPos: { bottom: "30%", right: "28%" },
-    floatPath: { x: [0, 14, -10, 0], y: [0, -16, 14, 0] },
+    desktopPos: { bottom: "25%", right: "22%" },
+    floatPath: { x: [0, 8, -6, 0], y: [0, -8, 8, 0] },
   },
   {
     id: "8",
-    name: "Abad Khan",
-    role: "Product Designer",
-    image: "/founder-man.png",
+    name: "Ayan ",
+    role: "AI Engineer",
+    image: "/ayan.png",
     baseSize: "lg",
-    desktopPos: { bottom: "8%", right: "12%" },
-    floatPath: { x: [0, -16, 14, 0], y: [0, 12, -18, 0] },
+    desktopPos: { bottom: "6%", right: "8%" },
+    floatPath: { x: [0, -8, 8, 0], y: [0, 8, -10, 0] },
+  },
+  {
+    id: "9",
+    name: "Shamas",
+    role: "AI Engineer",
+    image: "/shamas.png",
+    baseSize: "md",
+    desktopPos: { bottom: "8%", right: "46%" },
+    floatPath: { x: [0, -8, 8, 0], y: [0, 8, -10, 0] },
   },
 ];
 
 export const MeetOurExperts: React.FC = () => {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 
-  // Initial Resting Dimensions (in pixels)
+  // Original Resting Dimensions Restored
   const baseDimensions = {
     sm: { width: 64, height: 64 },
     md: { width: 112, height: 112 },
     lg: { width: 176, height: 176 },
   };
 
-  // Expanded Target Dimensions (in pixels) on Hover - gives full space for readable text
+  // Original Hover Target Dimensions Restored
   const expandedDimension = { width: 220, height: 220 };
 
   return (
     <section
       id="experts"
-      className="relative w-full min-h-[700px] md:min-h-[850px] bg-[#fdfafb] py-16 px-4 sm:px-6 lg:px-8 overflow-hidden font-sans flex flex-col justify-center items-center"
+      className="relative w-full h-[100dvh] max-h-[100dvh] bg-[#fdfafb] pt-24 pb-8 px-4 sm:px-6 lg:px-8 overflow-hidden font-sans flex flex-col justify-between items-center"
     >
       {/* Center Fixed Content */}
-      <div className="relative z-30 max-w-2xl mx-auto text-center space-y-6 my-auto pointer-events-auto">
+      <div className="relative z-30 max-w-2xl mx-auto text-center space-y-4 my-auto pointer-events-auto">
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -173,7 +182,6 @@ export const MeetOurExperts: React.FC = () => {
                 isHovered ? "z-50" : "z-10"
               }`}
             >
-              {/* Animating Width and Height directly (No Scale Distortion) */}
               <motion.div
                 animate={{
                   width: isHovered
@@ -190,10 +198,8 @@ export const MeetOurExperts: React.FC = () => {
                 }}
                 className="relative overflow-hidden rounded-[1.5rem] shadow-xl border border-rose-950/10 flex flex-col justify-end"
               >
-                {/* Replaced Image Asset with CSS Gradient Background */}
                 <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-[#ffc5be] via-[#fca8a1] to-[#f88f87] opacity-100" />
 
-                {/* Person Photo */}
                 <Image
                   src={member.image}
                   alt={member.name}
@@ -202,7 +208,6 @@ export const MeetOurExperts: React.FC = () => {
                   className="object-cover object-top relative z-10"
                 />
 
-                {/* Details Badge Overlay - Fixed font size, clear layout */}
                 <motion.div
                   initial={false}
                   animate={{
@@ -226,36 +231,38 @@ export const MeetOurExperts: React.FC = () => {
       </div>
 
       {/* Mobile Screen Fallback */}
-      <div className="md:hidden w-full mt-10 grid grid-cols-2 gap-4 max-w-sm mx-auto">
-        {teamMembers.map((member) => (
-          <div
-            key={member.id}
-            className="relative aspect-square rounded-[1.25rem] overflow-hidden border border-rose-950/10 shadow-md p-2 flex flex-col justify-end"
-          >
-            <Image
-              src="/founder-bg.png"
-              alt="Card Background"
-              fill
-              quality={100}
-              className="object-cover"
-            />
-            <Image
-              src={member.image}
-              alt={member.name}
-              fill
-              sizes="200px"
-              className="object-cover object-top relative z-10"
-            />
-            <div className="relative z-20 p-2 rounded-lg bg-white/80 backdrop-blur-sm">
-              <p className="text-xs font-bold text-zinc-900 truncate">
-                {member.name}
-              </p>
-              <p className="text-[10px] text-zinc-600 truncate">
-                {member.role}
-              </p>
+      <div className="md:hidden w-full z-30 pb-4">
+        <div className="flex gap-3 overflow-x-auto snap-x snap-mandatory px-2 py-2 no-scrollbar">
+          {teamMembers.map((member) => (
+            <div
+              key={member.id}
+              className="snap-center shrink-0 w-28 h-28 relative rounded-[1.25rem] overflow-hidden border border-rose-950/10 shadow-md p-1.5 flex flex-col justify-end"
+            >
+              <Image
+                src="/founder-bg.png"
+                alt="Card Background"
+                fill
+                quality={100}
+                className="object-cover"
+              />
+              <Image
+                src={member.image}
+                alt={member.name}
+                fill
+                sizes="150px"
+                className="object-cover object-top relative z-10"
+              />
+              <div className="relative z-20 p-1.5 rounded-lg bg-white/80 backdrop-blur-sm">
+                <p className="text-[10px] font-bold text-zinc-900 truncate">
+                  {member.name}
+                </p>
+                <p className="text-[8px] text-zinc-600 truncate">
+                  {member.role}
+                </p>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </section>
   );
