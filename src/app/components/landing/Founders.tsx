@@ -54,7 +54,7 @@ const teamMembers: TeamMember[] = [
   },
   {
     id: "5",
-    name: "Muneer Hussain",
+    name: "Muhammad Muneer Hussain",
     role: "AI Engineer",
     image: "/muneer.png",
     baseSize: "lg",
@@ -90,7 +90,7 @@ const teamMembers: TeamMember[] = [
   },
   {
     id: "9",
-    name: "Shamas",
+    name: "Muhammad Shamas",
     role: "AI Engineer",
     image: "/shamas.png",
     baseSize: "md",
