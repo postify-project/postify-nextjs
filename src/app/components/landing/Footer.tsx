@@ -83,7 +83,7 @@ export const Footer: React.FC = () => {
                 </p>
                 <p className="pt-1">
                   <span className="font-medium text-white">Email :</span>{" "}
-                  Abc@gmail.pk
+                  lestrofarhan@gmail.com
                 </p>
               </div>
             </div>
@@ -166,7 +166,7 @@ export const Footer: React.FC = () => {
 
           {/* Copyright Notice */}
           <div className="text-center text-[10px] sm:text-xs text-zinc-400">
-            © 2025 Board of Intermediate Education Karachi - Pakistan. All
+            © 2026 All
             rights reserved.
           </div>
         </div>
