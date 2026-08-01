@@ -12,7 +12,6 @@ async function verifyTokenWithBackend(token: string): Promise<boolean> {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
-      // Ensure fetch request is not cached by Next.js Edge/Server runtime
       cache: "no-store",
     });
     if (!res.ok) return false;
@@ -20,7 +19,7 @@ async function verifyTokenWithBackend(token: string): Promise<boolean> {
     const data = await res.json();
     return Boolean(data?.success);
   } catch (error) {
-    console.error("Token verification failed in proxy handler:", error);
+    console.error("Token verification failed in middleware:", error);
     return false;
   }
 }
@@ -29,7 +28,7 @@ export async function middleware(request: NextRequest) {
   const tokenCookie = request.cookies.get("token")?.value;
   const { pathname, searchParams } = request.nextUrl;
 
-  const urlToken = searchParams.get("token");
+  const urlToken = searchParams.get("token") || searchParams.get("q");
 
   // 1. Protected routes handling
   if (pathname.startsWith("/dashboard")) {
@@ -43,17 +42,18 @@ export async function middleware(request: NextRequest) {
       const isValid = await verifyTokenWithBackend(urlToken);
 
       if (isValid) {
-        // Token is valid! Prepare response and set cookie directly in browser headers
-        const response = NextResponse.next();
+        // Clean URL parameter
+        const cleanUrl = new URL(pathname, request.url);
+        const response = NextResponse.redirect(cleanUrl);
 
+        // Set cookie matching js-cookie settings (expires in 7 days, path '/', sameSite 'lax')
         response.cookies.set({
           name: "token",
           value: urlToken,
-          httpOnly: true,
-          secure: process.env.NODE_ENV === "production",
-          sameSite: "lax",
           path: "/",
-          maxAge: 60 * 60 * 24 * 7, // 7 days (adjust as needed)
+          sameSite: "lax",
+          maxAge: 60 * 60 * 24 * 7, // 7 days (matches `expires: 7`)
+          // httpOnly is intentionally omitted so js-cookie / client JS can access and clear it
         });
 
         return response;

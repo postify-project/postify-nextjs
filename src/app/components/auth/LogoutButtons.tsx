@@ -12,6 +12,7 @@ export default function LogoutButtons() {
   const BACKEND = process.env.NEXT_PUBLIC_API_URL;
 
   const handleLogout = async (isLogoutAll: boolean = false) => {
+    console.log("func run")
     setErr("");
     const type = isLogoutAll ? "all" : "single";
     setLoadingType(type);
@@ -23,6 +24,8 @@ export default function LogoutButtons() {
       : `${BACKEND}/auth/logout`;
 
     try {
+    console.log("try run")
+
       if (token) {
         // Send Authorization header with Bearer token
         await api.post(
@@ -39,6 +42,8 @@ export default function LogoutButtons() {
       console.warn("Logout endpoint error:", error.response?.data || error.message);
       // We still clear local state so the user isn't stuck logged in on the client side
     } finally {
+    console.log("finally run")
+
       // Clear token from cookies & user data from localStorage
       Cookies.remove("token");
       localStorage.removeItem("user");
@@ -51,7 +56,7 @@ export default function LogoutButtons() {
   };
 
   return (
-    <div className="flex flex-col gap-3 w-full max-w-xs">
+    <div className="flex flex-row gap-3 w-full max-w-xs">
       {err && (
         <div className="bg-red-500/10 border border-red-500/20 text-red-400 text-xs p-3 rounded-lg mb-2">
           {err}
@@ -62,7 +67,7 @@ export default function LogoutButtons() {
       <button
         onClick={() => handleLogout(false)}
         disabled={loadingType !== null}
-        className="w-full bg-[#1E293B] hover:bg-[#334155] text-white font-medium py-2.5 px-4 rounded-xl text-sm border border-[#334155]/50 transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 flex items-center justify-center gap-2 shadow-lg"
+        className="w-full bg-[#1E293B] hover:bg-[#334155] text-white font-medium py-2.5 px-4 min-w-[110px] rounded-xl text-sm border border-[#334155]/50 transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 flex items-center justify-center gap-2 shadow-lg"
       >
         {loadingType === "single" ? (
           "Logging out..."
@@ -90,7 +95,7 @@ export default function LogoutButtons() {
       <button
         onClick={() => handleLogout(true)}
         disabled={loadingType !== null}
-        className="w-full bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 font-medium py-2.5 px-4 rounded-xl text-sm transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 flex items-center justify-center gap-2"
+        className="w-full bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 font-medium py-2.5 px-4 min-w-[110px] rounded-xl text-sm transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 flex items-center justify-center gap-2"
       >
         {loadingType === "all" ? (
           "Logging out all devices..."
@@ -109,7 +114,7 @@ export default function LogoutButtons() {
                 d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
               />
             </svg>
-            Logout From All Devices
+            Logout All
           </>
         )}
       </button>

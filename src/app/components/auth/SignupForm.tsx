@@ -170,7 +170,7 @@ export default function SignUpForm() {
                 onChange={(value) =>
                   setForm({ ...form, phoneNumber: value || "" })
                 }
-                className="flex items-center gap-2 w-full rounded-lg border border-slate-200 bg-white px-2.5 py-3.5 text-xs text-black focus-within:border-rose-500 focus-within:bg-white transition-all"
+                className="flex items-center gap-2 w-full rounded-lg border border-slate-200 bg-white px-2.5 py-3.5 text-xs text-black focus-within:border-rose-500 focus-within:bg-white transition-all  [&_input]:!text-slate-900 [&_select]:!text-slate-900"
               />
             </div>
           </div>
