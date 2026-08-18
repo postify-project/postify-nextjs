@@ -1,0 +1,61 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+
+  --color-postify-pink: #d3045d;
+  --color-postify-maroon: #93023f;
+  --color-postify-dark: #2b000d;
+  --color-postify-muted: #6b7280;
+  --color-postify-border: #eebbce;
+  --color-postify-bg-pink: #faedf2;
+  --color-postify-bg-soft: #fff9fb;
+  --font-serotiva: Serotiva, -apple-system, Roboto, Helvetica, sans-serif;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  --color-postify-pink: var(--color-postify-pink);
+  --color-postify-maroon: var(--color-postify-maroon);
+  --color-postify-dark: var(--color-postify-dark);
+  --color-postify-muted: var(--color-postify-muted);
+  --color-postify-border: var(--color-postify-border);
+  --color-postify-bg-pink: var(--color-postify-bg-pink);
+  --color-postify-bg-soft: var(--color-postify-bg-soft);
+  --font-serotiva: var(--font-serotiva);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Custom styling for react-phone-number-input */
+.PhoneInputInput {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #0f172a; /* Dark text color so typed phone numbers are visible */
+  width: 100%;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.PhoneInputCountrySelect {
+  background: #ffffff;
+  color: #0f172a;
+}
+
